@@ -1,0 +1,11 @@
+
+{% if jobs_list %}
+    <ul>
+    {% for poll in jobs %}
+        <li>{{poll.title}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No jobs in this project</p>
+{% endif %}
+
