@@ -1,8 +1,10 @@
 
-{% if jobs_list %}
+
+{% if jobs %}
+    <h1>{{project}}</h1>
     <ul>
-    {% for poll in jobs %}
-        <li>{{poll.title}}</li>
+    {% for job in jobs %}
+        <li>{{job.title}}</li>
     {% endfor %}
     </ul>
 {% else %}
