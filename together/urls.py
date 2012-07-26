@@ -6,6 +6,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'together_app.views.home', name='home'),
+    url(r'^project/(?P<project_id>\d+)/$', 'together_app.views.home'),
+    url(r'^add_job$', 'together_app.views.add_job'),
     # url(r'^together/', include('together.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
