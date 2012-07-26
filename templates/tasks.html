@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block tasks %}  
+{% if jobs %}
+    <h1>{{project}}</h1>
+    <table class="table">
+    	<col width='5%'>
+    	<col width='5%'>
+    	<col width='85%'>
+    	<col width='5%'>
+    	<tbody>
+   	    	{% for job in jobs %}
+	    	<tr>
+	      		<td>{{ forloop.counter }}</td>
+	      		<td><input type="checkbox" value={{ job.id }} /></td>
+	      		<td>{{job.title}}</td>
+	      		<td class = 'right-row'>></td>
+	    	</tr>
+	    	{% endfor %}
+  		</tbody>
+  	</table>
+{% else %}
+    <p>No jobs in this project</p>
+{% endif %}
+
+{% endblock %}
+
+
+
+
+{% block task_details %}  
+<form class="form-horizontal">
+  <fieldset>
+  	<div class="control-group task-buttons">
+  		<button class="btn btn-success"><i class="icon-ok icon-white"></i> Mark completed</button>
+  		<input class="btn btn-primary" type="submit" value="Submit">
+  		<button class="btn cancel">Cancel</button>
+    </div>
+    <div class="control-group">
+    	<input type="text" class="large-input" id="title" placeholder='Add a job' >
+    </div>
+    <div class="control-group">
+    	<textarea class="large-input" id="note" rows='3' placeholder='You can add some notes. Even some links!' ></textarea>  <!-- |safe -->
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="due_date">Due Date</label>
+      <div class="controls">
+        <input type="date"  id="due_date">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="assign_to">Assign To</label>
+      <div class="controls">
+        <input type="text" id="assign_to">
+      </div>
+    </div>
+  </fieldset>
+</form>
+{% endblock %}
