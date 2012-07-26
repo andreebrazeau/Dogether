@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Together</title>
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-responsive.css"rel="stylesheet">
+    <link href="/static/css/docs.css" rel="stylesheet">
+</head>
+<body>
+	<div class="navbar navbar-fixed-top">
+	  	<div class="navbar-inner">
+	    	<div class="container">
+	      		<ul class="nav">
+			  		<li class="active">
+			    		<a href="#">Home</a>
+			  		</li>
+			  		<li><a href="#">This</a></li>
+			  		<li><a href="#">That</a></li>
+				</ul>
+	    	</div>
+	  	</div>
+	</div>
+	<div class="container-fluid">
+		<div class="row-fluid">
+		    <div class="span3">
+		      <!--Sidebar content-->
+		    </div>
+		    <div class="span5">
+		      	<!--Project content-->
+		    	{% block content %} {% endblock %}  
+		    </div>
+		    <div class="span4">
+		      	<!--Task content-->
+		    </div>
+		</div>
+	</div>
+	
+</body>
+</html>
+
+

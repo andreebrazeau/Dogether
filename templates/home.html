@@ -1,13 +1,20 @@
+{% extends "base.html" %}
 
-
+{% block content %}  
 {% if jobs %}
     <h1>{{project}}</h1>
-    <ul>
-    {% for job in jobs %}
-        <li>{{job.title}}</li>
-    {% endfor %}
-    </ul>
+    <table class="table">
+    	<tbody>
+   	    	{% for job in jobs %}
+	    	<tr>
+	      		<td>{{ forloop.counter }}</td>
+	      		<td>{{job.title}}</td>
+	      		<td>></td>
+	    	</tr>
+	    	{% endfor %}
+  		</tbody>
+  	</table>
 {% else %}
     <p>No jobs in this project</p>
 {% endif %}
-
+{% endblock %}
