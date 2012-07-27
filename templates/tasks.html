@@ -3,12 +3,13 @@
 {% block tasks %}  
 {% if jobs %}
     <h1>{{project}}</h1>
+    <script>var project_id = {{project.id}};</script>
     <table class="table">
     	<col width='5%'>
     	<col width='5%'>
     	<col width='85%'>
     	<col width='5%'>
-    	<tbody>
+    	<tbody id='job_table'>
    	    	{% for job in jobs %}
 	    	<tr>
 	      		<td>{{ forloop.counter }}</td>
