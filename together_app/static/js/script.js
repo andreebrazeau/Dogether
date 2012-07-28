@@ -7,8 +7,9 @@ $(document).ready(function() {
     $('#completed').click(mark_completed)
 });
 
-
-function add_job(){
+var Together = {}
+Together.Jobs = {}
+Together.Jobs.add = function(){
     var error_message = "";
     var job_id = $('#job_id').val();
     var title = $('#title').val();

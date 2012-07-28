@@ -12,7 +12,7 @@ def home(request, project_id):
     print 'LIST OF JOB', jobs
     return render_to_response('tasks.html', {'jobs' : jobs, 'project' : project})
 
-@csrf_exempt
+@csrf_exempt # should not be exempt
 def add_job(request):
 	print 'I AM IN THE add_job VIEW'
 	job_id = request.POST.get('job_id', False)
