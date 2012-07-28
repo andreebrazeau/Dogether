@@ -5,11 +5,11 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'together_app.views.home', name='home'),
-    url(r'^project/(?P<project_id>\d+)/$', 'together_app.views.home'),
-    url(r'^add_job$', 'together_app.views.add_job'),
-    url(r'^get_job_details$', 'together_app.views.get_job_details'),
-    url(r'^mark_completed$', 'together_app.views.markcompleted'),
+    url(r'^$', 'together_app.views_projects.home', name='home'),
+    url(r'^project/(?P<project_id>\d+)/$', 'together_app.views_projects.home'),
+    url(r'^job/add_job$', 'together_app.views_jobs.add_job'),
+    url(r'^job/get_job_details$', 'together_app.views_jobs.get_job_details'),
+    url(r'^job/mark_completed$', 'together_app.views_jobs.markcompleted'),
     # url(r'^together/', include('together.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

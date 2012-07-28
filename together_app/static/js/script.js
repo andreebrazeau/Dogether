@@ -1,7 +1,7 @@
 var edit_mode = false
 $(document).ready(function() {
 
-    $('#submit-job').click(Together.Jobs.add_job);
+    $('#submit-job').click(Together.Jobs.add);
     $('tr').click(get_job_details);
     $('#add_job_btn').click(clear_form_elements);
     $('#completed').click(mark_completed)
@@ -18,7 +18,7 @@ Together.Jobs.add = function(){
     var assign_to = $('#assign_to').val();
     $.ajax({
         type: "POST",
-        url: "/add_job",
+        url: "/job/add_job",
         data: { job_id: job_id, title: title, note: note, due_date:due_date, assign_to:assign_to, project_id:project_id}
     }).done(add_job_to_page);
     return false;
@@ -40,7 +40,7 @@ function get_job_details () {
     job_id = $(this).find('input').val();
     $.ajax({
         type: "POST",
-        url: "/get_job_details",
+        url: "job/get_job_details",
         data: { job_id : job_id}
     }).done(show_job_detail);  
 };
@@ -70,7 +70,7 @@ function clear_form_elements() {
 function mark_completed () {
     $.ajax({
         type: "POST",
-        url: "/mark_completed",
+        url: "job/mark_completed",
         data: { job_id: job_id }
     }).done();
     return false;
