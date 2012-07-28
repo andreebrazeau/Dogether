@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 
 {% block tasks %}  
-{% if jobs %}
     <h1>{{project}}</h1>
-    <script>var project_id = {{project.id}};</script>
+   	<script>var project_id = {{project.id}};</script>	    
     <table class="table">
     	<col width='5%'>
     	<col width='5%'>
@@ -14,30 +13,28 @@
 	    	<tr>
 	      		<td>{{ forloop.counter }}</td>
 	      		<td><input type="checkbox" value={{ job.id }} /></td>
-	      		<td>{{job.title}}</td>
+	      		<td class = 'job-id'>{{job.title}}</td>
 	      		<td class = 'right-row'>></td>
 	    	</tr>
 	    	{% endfor %}
   		</tbody>
   	</table>
-{% else %}
-    <p>No jobs in this project</p>
-{% endif %}
-
+  	<button class="btn btn-info" id='add_job_btn'>Add job</button>
 {% endblock %}
 
 
 
 
 {% block task_details %}  
-<form class="form-horizontal">
+<form class="form-horizontal" id='job-form'>
   <fieldset>
   	<div class="control-group task-buttons">
-  		<button class="btn btn-success"><i class="icon-ok icon-white"></i> Mark completed</button>
+  		<button class="btn btn-success" id='completed'><i class="icon-ok icon-white"></i> Mark completed</button>
   		<button class="btn btn-primary" id="submit-job">Submit</button>
   		<button class="btn cancel">Cancel</button>
     </div>
     <div class="control-group">
+    	<input type='hidden' value='' id='job_id'>
     	<input type="text" class="large-input" id="title" placeholder='Add a job' >
     </div>
     <div class="control-group">
