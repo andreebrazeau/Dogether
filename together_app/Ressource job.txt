@@ -1,0 +1,6 @@
+Ressource job
+  - create
+  - update
+  - destroy
+  - show
+  

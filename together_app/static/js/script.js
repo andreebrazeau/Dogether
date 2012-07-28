@@ -1,7 +1,7 @@
 var edit_mode = false
 $(document).ready(function() {
 
-    $('#submit-job').click(add_job);
+    $('#submit-job').click(Together.Jobs.add_job);
     $('tr').click(get_job_details);
     $('#add_job_btn').click(clear_form_elements);
     $('#completed').click(mark_completed)

@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response
 from django.db.models import Max
-from models import Project, Job
+from models_projects import Project
+from models_jobs import Job
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 # from json_data import *
 from django.http import HttpResponse
