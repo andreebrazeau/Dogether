@@ -26,30 +26,31 @@
 
 
 {% block task_details %}  
-<form class="form-horizontal" id='job-form'>
-  <fieldset>
+<form class="form-horizontal" id='job-form' name = 'job-form'>
+  <fieldset >
   	<div class="control-group task-buttons">
   		<button class="btn btn-success" id='completed'><i class="icon-ok icon-white"></i> Mark completed</button>
   		<button class="btn btn-primary" id="submit-job">Submit</button>
   		<button class="btn cancel">Cancel</button>
     </div>
     <div class="control-group">
-    	<input type='hidden' value='' id='job_id'>
-    	<input type="text" class="large-input" id="title" placeholder='Add a job' >
+    	<input type='hidden' value='' name= 'job_id'>
+    	<input type='hidden' value='' name= 'project_id'>
+    	<input type="text" class="large-input" id="title" placeholder='Add a job' name='title'>
     </div>
     <div class="control-group">
-    	<textarea class="large-input" id="note" rows='3' placeholder='You can add some notes. Even some links!' ></textarea>  <!-- |safe -->
+    	<textarea class="large-input" id="note" rows='3' placeholder='You can add some notes. Even some links!' name='note'></textarea>  <!-- |safe -->
     </div>
     <div class="control-group">
       <label class="control-label" for="due_date">Due Date</label>
       <div class="controls">
-        <input type="date"  id="due_date">
+        <input type="date"  id="due_date" name='due_date'>
       </div>
     </div>
     <div class="control-group">
       <label class="control-label" for="assign_to">Assign To</label>
       <div class="controls">
-        <input type="text" id="assign_to">
+        <input type="text" id="assign_to" name='assign_to'>
       </div>
     </div>
   </fieldset>

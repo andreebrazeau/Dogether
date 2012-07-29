@@ -10,16 +10,18 @@ $(document).ready(function() {
 var Together = {}
 Together.Jobs = {}
 Together.Jobs.add = function(){
-    var error_message = "";
-    var job_id = $('#job_id').val();
-    var title = $('#title').val();
-    var note = $('#note').val();
-    var due_date = $('#due_date').val();
-    var assign_to = $('#assign_to').val();
+    var form_data = $('#job-form').serializeObject();
+    // var error_message = "";
+    // var job_id = $('#job_id').val();
+    // var title = $('#title').val();
+    // var note = $('#note').val();
+    // var due_date = $('#due_date').val();
+    // var assign_to = $('#assign_to').val();
     $.ajax({
         type: "POST",
         url: "/job/add_job",
-        data: { job_id: job_id, title: title, note: note, due_date:due_date, assign_to:assign_to, project_id:project_id}
+        data: form_data 
+        // { job_id: job_id, title: title, note: note, due_date:due_date, assign_to:assign_to, project_id:project_id}
     }).done(add_job_to_page);
     return false;
 };
@@ -75,7 +77,22 @@ function mark_completed () {
     return false;
 }
 
-
+$.fn.serializeObject = function()
+{
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
 
 
 
