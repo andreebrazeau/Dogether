@@ -26,21 +26,20 @@ Together.Jobs.add = function(){
 
 function add_job_to_page(data) {
     console.log(data.order)
-    if (data.add_job_to_list == true) {
-        var new_job = '<tr><td>'+
+    var new_job = '<tr><td>'+
     data.order+
     '</td><td><input type="checkbox"></td><td>'+
     data.title +
     '</td><td class = "right-row">></td></tr>';
     $('#job_table').append(new_job)
-    } 
+     
 };
 
 function get_job_details () {
     job_id = $(this).find('input').val();
     $.ajax({
         type: "POST",
-        url: "job/get_job_details",
+        url: "/job/get_job_details",
         data: { job_id : job_id}
     }).done(show_job_detail);  
 };
@@ -70,7 +69,7 @@ function clear_form_elements() {
 function mark_completed () {
     $.ajax({
         type: "POST",
-        url: "job/mark_completed",
+        url: "/job/mark_completed",
         data: { job_id: job_id }
     }).done();
     return false;
