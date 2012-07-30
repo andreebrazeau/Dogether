@@ -3,4 +3,4 @@ Ressource job
   - update
   - destroy
   - show
-  
+  - index # List all ressources 

@@ -1,22 +1,21 @@
 {% extends "base.html" %}
+{% block projects %}
+  <button class='btn' id='show-projects'>Show Projects</button>
+  <ul id='projects'>
+  </ul>
+{% endblock %}
+
+
 
 {% block tasks %}  
-    <h1>{{project}}</h1>
-   	<script>var project_id = {{project.id}};</script>	    
+    <h1>{{project}}</h1>	    
     <table class="table">
     	<col width='5%'>
     	<col width='5%'>
     	<col width='85%'>
     	<col width='5%'>
     	<tbody id='job_table'>
-   	    	{% for job in jobs %}
-	    	<tr>
-	      		<td>{{ forloop.counter }}</td>
-	      		<td><input type="checkbox" value={{ job.id }} /></td>
-	      		<td class = 'job-id'>{{job.title}}</td>
-	      		<td class = 'right-row'>></td>
-	    	</tr>
-	    	{% endfor %}
+   	    	
   		</tbody>
   	</table>
   	<button class="btn btn-info" id='add_job_btn'>Add job</button>
@@ -34,8 +33,8 @@
   		<button class="btn cancel">Cancel</button>
     </div>
     <div class="control-group">
-    	<input type='hidden' value='' name= 'job_id'>
-    	<input type='hidden' value='' name= 'project_id'>
+    	<input type='hidden' value='' name='job_id'>
+    	<input type='hidden' value={{project.id}} name='project_id'>
     	<input type="text" class="large-input" id="title" placeholder='Add a job' name='title'>
     </div>
     <div class="control-group">

@@ -1,7 +1,17 @@
 var edit_mode = false
 $(document).ready(function() {
-
-    $('#submit-job').click(Together.Jobs.add);
+    $('#show-projects').click(Together.Project.index);
+    $("ul#projects").on('click','a.project',Together.Jobs.index);
+    $('#submit-job').click(function(event){ //in a event click return 'event'
+        event.preventDefault(); // make sure to not do the Default (send a get)
+        form_data = Together.Jobs.get_data();
+        console.log(form_data.job_id);
+        if (form_data.job_id == '') {
+            Together.Jobs.add(form_data);
+        }else{
+            Together.Jobs.update(form_data);
+        }
+    });
     $('tr').click(get_job_details);
     $('#add_job_btn').click(clear_form_elements);
     $('#completed').click(mark_completed)
@@ -9,33 +19,83 @@ $(document).ready(function() {
 
 var Together = {}
 Together.Jobs = {}
-Together.Jobs.add = function(){
+Together.Project = {}
+
+Together.Jobs.index = function(){
+    project_id = $(this).attr('id');    
+    url = '/job/index'
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: {project_id :project_id}
+    }).done(Together.Jobs.list_project);
+};
+
+Together.Jobs.list_project = function(data) {
+    for (var each in data) {
+        html = Together.Jobs.job_html(data[each]);
+        $('#job_table').append(html);
+
+    };
+}
+
+Together.Jobs.job_html = function(job) {
+    new_job = '<tr><td>'+
+    job.fields.order+
+    '</td><td><input value="'+job.pk+'" type="checkbox"></td><td>'+
+    job.fields.title +
+    '</td><td class = "right-row">></td></tr>'
+    return new_job
+};
+
+Together.Jobs.get_data = function(){
     var form_data = $('#job-form').serializeObject();
+    return form_data;
+};
+Together.Jobs.job = function(data) {
+    job = new Object();
+    job.id = job['job_id'];
+    job.title = job['title'];
+    job.assign_to = job['assign_to'];
+    job.due_date = job['due_date'];
+    job.parent = job['parent'];
+    job.project_id = job['project_id'];
+    job.completed = job['completed'];
+    job.order - job['order'];
+    return job
+}
+Together.Jobs.add = function(form_data){
     // var error_message = "";
-    // var job_id = $('#job_id').val();
-    // var title = $('#title').val();
-    // var note = $('#note').val();
-    // var due_date = $('#due_date').val();
-    // var assign_to = $('#assign_to').val();
     $.ajax({
         type: "POST",
         url: "/job/add_job",
         data: form_data 
-        // { job_id: job_id, title: title, note: note, due_date:due_date, assign_to:assign_to, project_id:project_id}
-    }).done(add_job_to_page);
-    return false;
+    }).done(Together.Jobs.add_job_to_page);
 };
 
-function add_job_to_page(data) {
+Together.Jobs.update = function (form_data) {
+    $.ajax({
+        type: "POST",
+        url: "/job/update",
+        data: form_data 
+    }).done(update_title);
+};
+
+Together.Jobs.add_job_to_page = function(data) {
     console.log(data.order)
     var new_job = '<tr><td>'+
     data.order+
     '</td><td><input type="checkbox"></td><td>'+
     data.title +
     '</td><td class = "right-row">></td></tr>';
-    $('#job_table').append(new_job)
-     
+    $('#job_table').append(new_job);
 };
+
+Together.Jobs.update_title = function() {
+
+};
+
+
 
 function get_job_details () {
     job_id = $(this).find('input').val();
@@ -93,6 +153,34 @@ $.fn.serializeObject = function()
     });
     return o;
 };
+
+Together.Project.index = function() {
+    $('#projects').empty()
+    $.ajax({
+        type: "POST",
+        url: "project/index",
+    }).done(Together.Project.list_project);  
+}
+
+Together.Project.list_project = function(data) {
+    for (var each in data) {
+        html = Together.Project.project_html(data[each]);
+        $('#projects').append(html);
+
+    };
+}
+
+Together.Project.project_html = function(project) {
+    html = '<li><a class="project" id='+project.pk+'>'+project.fields.title+'</a></li>';
+    return html
+}
+
+
+
+
+
+
+
 
 
 
