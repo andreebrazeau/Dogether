@@ -12,7 +12,7 @@ $(document).ready(function() {
             Together.Jobs.update(form_data);
         }
     });
-    $('tr').click(get_job_details);
+    $('tbody#job_table').on('click','tr.job',Together.Jobs.get_job_details); //Together.Jobs.get_job_details
     $('#add_job_btn').click(clear_form_elements);
     $('#completed').click(mark_completed)
 });
@@ -22,7 +22,9 @@ Together.Jobs = {}
 Together.Project = {}
 
 Together.Jobs.index = function(){
-    project_id = $(this).attr('id');    
+    project_id = $(this).attr('id');
+    console.log($(this).html())
+    $('h1.project-title').html($(this).html())    
     url = '/job/index'
     $.ajax({
         type: "POST",
@@ -33,17 +35,18 @@ Together.Jobs.index = function(){
 
 Together.Jobs.list_project = function(data) {
     for (var each in data) {
-        html = Together.Jobs.job_html(data[each]);
+        job = Together.Jobs.job(data[each])
+        html = Together.Jobs.job_html(job);
         $('#job_table').append(html);
-
+        $('#job_table tr').last().data('job-data',job);
     };
 }
 
-Together.Jobs.job_html = function(job) {
-    new_job = '<tr><td>'+
-    job.fields.order+
-    '</td><td><input value="'+job.pk+'" type="checkbox"></td><td>'+
-    job.fields.title +
+Together.Jobs.job_html = function(job) {    
+    new_job = '<tr class="job"><td>'+
+    job.order+
+    '</td><td><input value="'+job.job_id+'" type="checkbox"></td><td>'+
+    job.title +
     '</td><td class = "right-row">></td></tr>'
     return new_job
 };
@@ -53,15 +56,16 @@ Together.Jobs.get_data = function(){
     return form_data;
 };
 Together.Jobs.job = function(data) {
-    job = new Object();
-    job.id = job['job_id'];
-    job.title = job['title'];
-    job.assign_to = job['assign_to'];
-    job.due_date = job['due_date'];
-    job.parent = job['parent'];
-    job.project_id = job['project_id'];
-    job.completed = job['completed'];
-    job.order - job['order'];
+    job = {
+    job_id: data.pk,
+    title: data.fields.title,
+    assign_to: data.fields.assign_to,
+    due_date: data.fields.due_date,
+    parent: data.fields.parent,
+    project_id: data.fields.project_id,
+    completed: data.fields.completed,
+    order: data.fields.order
+    };
     return job
 }
 Together.Jobs.add = function(form_data){
@@ -97,7 +101,7 @@ Together.Jobs.update_title = function() {
 
 
 
-function get_job_details () {
+Together.Jobs.get_job_details = function() {
     job_id = $(this).find('input').val();
     $.ajax({
         type: "POST",
