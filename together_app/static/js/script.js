@@ -105,7 +105,7 @@ Jobs.list_project = function(data) { //create the list of project
 }
 
 Jobs.job_html = function(job) {//create the html for a job
-    var new_job = '<tr class="job"><td>'+
+    var new_job = '<tr class="job" id='+job.id+'><td>'+
     job.order+
     '</td><td><input value="'+job.id+'" type="checkbox"></td><td>'+
     job.title +
@@ -147,8 +147,11 @@ Jobs.add_job_to_page = function(data) { //add the job th the list of job.
 };
 
 Jobs.update_title = function(data) {
-    alert("I'am here")
-    //job_row = $('#job_table').find()
+    var old_row = $('#job_table tr#'+data.id)
+    var new_row = Jobs.job_html(data)
+    old_row.replaceWith(new_row)
+    new_row.data('job-data',data)
+    clear_form()
 };
 
 Jobs.get_job_details = function() { //show detail on the 'form'
