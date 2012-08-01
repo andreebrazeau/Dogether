@@ -25,7 +25,7 @@
 
 
 {% block task_details %}  
-<form class="form-horizontal" id='job-form' name = 'job-form'>
+<form class="form-horizontal" id='job-form' name = 'job-form'>{% csrf_token %}
   <fieldset >
   	<div class="control-group task-buttons">
   		<button class="btn btn-success" id='completed'><i class="icon-ok icon-white"></i> Mark completed</button>
@@ -33,7 +33,6 @@
   		<button class="btn cancel">Cancel</button>
     </div>
     <div class="control-group">
-    	<input type='hidden' value='' name='job_id'>
     	<input type='hidden' value='' name='project_id'>
     	<input type="text" class="large-input" id="title" placeholder='Add a job' name='title'>
     </div>

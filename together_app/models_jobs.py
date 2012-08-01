@@ -21,28 +21,34 @@ class Job(models.Model):
 	def create(params):
 		print 'in Job.create'
 		job = Job()
-		job.update(params)
+		job.set_params(params)
+		job.set_project_id(params)
+		job.set_order(params)
 		job.save()
 		return job._job_to_json()
 
-	def update(self, params):
-		print 'in Job.update'
-		print params
+	@staticmethod
+	def update(params):
+		job = Job.objects.get(id = int(params['job_id']))
+		job.set_params(params)
+		job.save()
+		return job._job_to_json()
+
+	def set_params(self, params):
 		if params.has_key('due_date'): # if the field if empty, nedded to change it to None for db transaction
 			if params['due_date'] == '':
 				setattr(self, 'due_date', None)
 			else:
 				setattr(self, 'due_date', params['due_date'])
-
 		for key in ['title', 'note', 'assign_to']: # set all params
 			if params.has_key(key):
-				# print 'params', getattr(self, key)
 				setattr(self, key, params[key])
-		
+	def set_project_id(self, params):
 		project = Project.objects.get(id = params['project_id']) # assign project
 		setattr(self, 'project_id', project)
 
-		max_order = Job.objects.filter(project_id = project).aggregate(Max('order')) # assign order
+	def set_order(self, params):
+		max_order = Job.objects.filter(project_id = self.project_id).aggregate(Max('order')) # assign order
 		if  max_order['order__max'] == None:
 			order = 1
 		else:
@@ -50,7 +56,6 @@ class Job(models.Model):
 		setattr(self, 'order', order)
 
 	def _job_to_json(self):
-		print self.project_id.id
 		result = {
 			'assign_to': self.assign_to, 
 			'completed': self.completed,
@@ -62,7 +67,6 @@ class Job(models.Model):
 			'project_id': self.project_id.id, 
 			'title': self.title
 			}
-		print result
 		data = json.dumps(result)
 		return data
 

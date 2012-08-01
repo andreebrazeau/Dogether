@@ -4,23 +4,62 @@ $(document).ready(function() {
     $("ul#projects").on('click','li.project',Jobs.index);
     $('#submit-job').click(function(event){ //in a event click return 'event'
         event.preventDefault(); // make sure to not do the Default (send a get)
-        form_data = Jobs.get_data();//get the data from the form
-        if (form_data.job_id == '') { // if new job
+        var job_data = $('#job-form').data('job-data')
+        var form_data = Jobs.get_form_data();//get the data from the form
+        if (job_data == '') { // if new job
             Jobs.add(form_data); // add job
         }else{
-            Jobs.update(form_data); // update job
+            Jobs.update(form_data,job_data); // update job
         }
     });
     $('tbody#job_table').on('click','tr.job',Jobs.get_job_details); //Jobs.get_job_details
     $('#add_job_btn').click(clear_form);
     $('#completed').click(Jobs.mark_completed)
+
+    //This is to add the CSRF to tha Ajax POST method
+    jQuery(document).ajaxSend(function(event, xhr, settings) {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    });
 });
 
 
 Jobs = {}
 Projects = {}
 Projects.project = function(data) { //create a object job
-    project = {
+    var project = {
     project_id: data.pk,
     title: data.fields.title,
     user_id: data.fields.user_id,
@@ -30,7 +69,7 @@ Projects.project = function(data) { //create a object job
 }
 
 Jobs.job = function(data) { //create a object job
-    job = {
+    var job = {
     id: data.pk,
     title: data.fields.title,
     note: data.fields.note,
@@ -66,7 +105,7 @@ Jobs.list_project = function(data) { //create the list of project
 }
 
 Jobs.job_html = function(job) {//create the html for a job
-    new_job = '<tr class="job"><td>'+
+    var new_job = '<tr class="job"><td>'+
     job.order+
     '</td><td><input value="'+job.id+'" type="checkbox"></td><td>'+
     job.title +
@@ -74,10 +113,9 @@ Jobs.job_html = function(job) {//create the html for a job
     return new_job
 };
 
-Jobs.get_data = function(){ //get the project data from the form and 
+Jobs.get_form_data = function(){ //get the project data from the form and 
     var form_data = $('#job-form').serializeObject();
     form_data.project_id = $('#job-form').data('project_id'); // get the project id from the job form and sent it to the form
-    console.log(form_data)
     return form_data;
 };
 
@@ -91,12 +129,14 @@ Jobs.add = function(form_data){ // add a new job
     }).done(Jobs.add_job_to_page);// add job to page
 };
 
-Jobs.update = function (form_data) {
+Jobs.update = function (form_data, job_data) {
+    var job_id = job_data.id;
+    form_data.job_id= job_id
     $.ajax({
         type: "POST",
         url: "/job/update",
-        data: form_data 
-    }).done(update_title);
+        data: form_data
+    }).done(Jobs.update_title);
 };
 
 Jobs.add_job_to_page = function(data) { //add the job th the list of job. 
@@ -106,22 +146,18 @@ Jobs.add_job_to_page = function(data) { //add the job th the list of job.
     clear_form()
 };
 
-Jobs.update_title = function() {
-
+Jobs.update_title = function(data) {
+    alert("I'am here")
+    //job_row = $('#job_table').find()
 };
 
 Jobs.get_job_details = function() { //show detail on the 'form'
-    job = $(this).data('job-data'); 
-    console.log(job)
+    var job = $(this).data('job-data'); 
+    $('#job-form').data('job-data',job)
     $('#title').val(job.title)
     $('#note').val(job.note)
     $('#due_date').val(job.due_date)
     $('#assign_to').val(job.assign_to)
-    // $.ajax({
-    //     type: "POST",
-    //     url: "/job/get_job_details",
-    //     data: job
-    // }).done(Jobs.show_job_detail);  
 };
 
 Jobs.show_job_detail = function(data) {
@@ -143,6 +179,7 @@ function clear_form() {
                 $(this).val('')
         }
     });
+    $('#job-form').data('job-data','')
 }
 
 Jobs.mark_completed = function() {
@@ -193,6 +230,8 @@ $.fn.serializeObject = function()
     return o;
 };
 
+
+//
 
 
 
