@@ -1,6 +1,7 @@
 from django.db import models
 from models_projects import Project
 from django.db.models import Max
+import json
 
 class Job(models.Model):
 	title = models.CharField(max_length=200)
@@ -21,12 +22,12 @@ class Job(models.Model):
 		print 'in Job.create'
 		job = Job()
 		job.update(params)
-		print 'job.__dict__',job.__dict__
 		job.save()
-		return job
+		return job._job_to_json()
 
 	def update(self, params):
 		print 'in Job.update'
+		print params
 		if params.has_key('due_date'): # if the field if empty, nedded to change it to None for db transaction
 			if params['due_date'] == '':
 				setattr(self, 'due_date', None)
@@ -47,3 +48,25 @@ class Job(models.Model):
 		else:
 			order = max_order['order__max']+1
 		setattr(self, 'order', order)
+
+	def _job_to_json(self):
+		print self.project_id.id
+		result = {
+			'assign_to': self.assign_to, 
+			'completed': self.completed,
+			'due_date': str(self.due_date),
+			'id' : self.id,
+			'note':self.note,
+			'order': self.order,
+			'parent': self.parent,
+			'project_id': self.project_id.id, 
+			'title': self.title
+			}
+		print result
+		data = json.dumps(result)
+		return data
+
+
+
+
+

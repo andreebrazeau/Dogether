@@ -11,10 +11,9 @@ import json
 
 @csrf_exempt # should not be exempt
 def add_job(request):
-	print 'I AM IN THE add_job VIEW'
 	form_job = request.POST
-	print 'this is the form',form_job
 	job = Job.create(form_job)
+	print job
 	# else :
 	# 	add_job_to_list = False`
 	# 	order = ''
@@ -25,21 +24,19 @@ def add_job(request):
 	# 	job_before.assign_to = assign_to
 	# 	job_before.save()
 
-	return _job_to_json(job)
+	return HttpResponse(job, 'application/json')
 
 @csrf_exempt
-def index(request):
-	project_id = request.POST['project_id']
-	print project_id
+def index(request, project_id):
 	data = serializers.serialize('json', Job.objects.filter(project_id=int(project_id)))
 	return HttpResponse(data, 'application/json')
 
 
 @csrf_exempt
 def get_job_details(request):
-	job_id = request.POST.get('job_id')
-	job = Job.objects.get(id = job_id)
-	return _job_to_json(job)
+	job = request.POST
+	job = Job.objects.get(id = int(job['job_id']))
+	return HttpResponse(job, 'application/json')
 
 def mark_completed():
 	request.POST.get('job_id')
@@ -49,10 +46,3 @@ def mark_completed():
 	data = json.dumps(result)
 	return HttpResponse(data, 'application/json')
 
-def _job_to_json(job):
-	result = {'title' : job.title,
-		'note':job.note, 
-		'due_date':str(job.due_date),
-		'assign_to': job.assign_to}
-	data = json.dumps(result)
-	return HttpResponse(data, 'application/json')
