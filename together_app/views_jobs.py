@@ -7,7 +7,11 @@ from models_projects import Project
 from models_jobs import Job
 import json
 
-
+@csrf_protect
+def index(request, project_id):
+	job_ordered = Job.objects.filter(project_id=int(project_id)).order_by('order')
+	data = serializers.serialize('json', job_ordered )
+	return HttpResponse(data, 'application/json')
 
 @csrf_protect # should not be exempt
 def add_job(request):
@@ -20,11 +24,6 @@ def update(request):
 	form_data = request.POST
 	job = Job.update(form_data)
 	return HttpResponse(job, 'application/json')
-
-@csrf_protect
-def index(request, project_id):
-	data = serializers.serialize('json', Job.objects.filter(project_id=int(project_id)))
-	return HttpResponse(data, 'application/json')
 
 
 @csrf_protect

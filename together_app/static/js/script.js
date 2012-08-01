@@ -1,5 +1,6 @@
 var edit_mode = false
 $(document).ready(function() {
+    $('div#error_message').hide()
     $('#show-projects').click(Projects.index);
     $("ul#projects").on('click','li.project',Jobs.index);
     $('#submit-job').click(function(event){ //in a event click return 'event'
@@ -120,13 +121,15 @@ Jobs.get_form_data = function(){ //get the project data from the form and
 };
 
 Jobs.add = function(form_data){ // add a new job
-    // var error_message = "";
-
-    $.ajax({
-        type: "POST",
-        url: "/job/add_job",
-        data: form_data 
-    }).done(Jobs.add_job_to_page);// add job to page
+    if (Jobs.form_error(form_data) == false) {
+        $('div#error-message').hide()
+        $('div#error-message').html('')
+        $.ajax({
+            type: "POST",
+            url: "/job/add_job",
+            data: form_data 
+        }).done(Jobs.add_job_to_page);// add job to page
+    }
 };
 
 Jobs.update = function (form_data, job_data) {
@@ -150,7 +153,7 @@ Jobs.update_title = function(data) {
     var old_row = $('#job_table tr#'+data.id)
     var new_row = Jobs.job_html(data)
     old_row.replaceWith(new_row)
-    new_row.data('job-data',data)
+    $('#job_table tr#'+data.id).data('job-data',data)
     clear_form()
 };
 
@@ -192,6 +195,20 @@ Jobs.mark_completed = function() {
         data: { job_id: job.id }
     }).done();
     return false;
+}
+
+Jobs.form_error = function(form_data) {
+    var message = ''
+    if (form_data.title == ''){
+        message += 'Title should not be empty.</br>'
+    }
+
+    if (message.length > 0 ) {
+        $('div#error-message').show()
+        $('div#error-message').html('<p class="error-message">'+message+'</p>')
+    }else{
+        return false
+    }
 }
 
 Projects.index = function() {

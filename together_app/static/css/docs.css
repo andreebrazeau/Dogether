@@ -7,7 +7,7 @@ body {
 }*/
 
 .large-input {
-	width: 100%;
+	width: 95%;
 }
 
 .form-horizontal .control-label {
@@ -31,4 +31,7 @@ body {
 }
 textarea {
 	outline: none;
+}
+#error-message p{
+	color:red;
 }
