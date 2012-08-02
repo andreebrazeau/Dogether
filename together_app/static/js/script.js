@@ -1,6 +1,8 @@
 var edit_mode = false
 $(document).ready(function() {
     $('div#error_message').hide()
+    $('div.right').hide()
+    $('div.center').hide()
     $('#show-projects').click(Projects.index);
     $("ul#projects").on('click','li.project',Jobs.index);
     $('#submit-job').click(function(event){ //in a event click return 'event'
@@ -85,6 +87,8 @@ Jobs.job = function(data) { //create a object job
 }
 
 Jobs.index = function(){ //create idex
+    $('div.center').show()
+    $('div.right').hide()
     $('#job_table').empty()
     var project = $(this).data('project-data');//get project ID from project 
     $('h1.project-title').html(project.title)
@@ -158,6 +162,7 @@ Jobs.update_title = function(data) {
 };
 
 Jobs.get_job_details = function() { //show detail on the 'form'
+    $('div.right').show()
     var job = $(this).data('job-data'); 
     $('#job-form').data('job-data',job)
     $('#title').val(job.title)
@@ -166,15 +171,8 @@ Jobs.get_job_details = function() { //show detail on the 'form'
     $('#assign_to').val(job.assign_to)
 };
 
-Jobs.show_job_detail = function(data) {
-    var db_data = data
-    $('#title').val(data.title)
-    $('#note').val(data.note)
-    $('#due_date').val(data.due_date)
-    $('#assign_to').val(data.assign_to)
-};
-
 function clear_form() {
+    $('div.right').show()
     $('#job-form').find(':input').each(function() {
         switch(this.type) {
             case 'text':
@@ -212,6 +210,7 @@ Jobs.form_error = function(form_data) {
 }
 
 Projects.index = function() {
+    $('#job-form').hide()
     $('#projects').empty()
     $.ajax({
         type: "POST",

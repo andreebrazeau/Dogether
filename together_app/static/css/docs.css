@@ -1,5 +1,6 @@
 body {
 	padding-top: 50px;
+	padding-right: 20px;
 }
 
 /*div  {
@@ -7,7 +8,7 @@ body {
 }*/
 
 .large-input {
-	width: 95%;
+	width: 98%;
 }
 
 .form-horizontal .control-label {
