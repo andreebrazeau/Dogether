@@ -36,3 +36,12 @@ textarea {
 #error-message p{
 	color:red;
 }
+div.right {
+	visibility:hidden;
+}
+div.center {
+	visibility:hidden;
+}
+#job_table tr.completed {
+	background-color: red;
+}

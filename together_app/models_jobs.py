@@ -1,6 +1,7 @@
 from django.db import models
-from models_projects import Project
 from django.db.models import Max
+from django.core import serializers
+from models_projects import Project
 import json
 
 class Job(models.Model):
@@ -13,13 +14,20 @@ class Job(models.Model):
 	project_id = models.ForeignKey(Project)
 	completed = models.BooleanField(default = False)
 	order = models.IntegerField(null=True)
+	deleted = models.BooleanField(default = False)
 	
 	def __unicode__(self):
 		return self.title
 
 	@staticmethod
+	def index(project_id):
+		print "I made it here"
+		jobs_ordered = Job.objects.filter(project_id=int(project_id), deleted=False).order_by('completed', 'order')
+		jobs_ordered = serializers.serialize('json', jobs_ordered) # use serialyze here but do not give the same kind of data of _job_to_json So in javascript need to transfer that back to the same kind of value
+		return jobs_ordered
+
+	@staticmethod
 	def create(params):
-		print 'in Job.create'
 		job = Job()
 		job.set_params(params)
 		job.set_project_id(params)
@@ -29,8 +37,25 @@ class Job(models.Model):
 
 	@staticmethod
 	def update(params):
-		job = Job.objects.get(id = int(params['job_id']))
+		job = Job.objects.get(id = int(params['id']))
 		job.set_params(params)
+		job.save()
+		return job._job_to_json()
+
+	@staticmethod
+	def mark_completed(params):
+		job = Job.objects.get(id = int(params['id']))
+		if job.completed == True:
+			job.completed = False
+		elif job.completed == False:
+			job.completed = True
+		job.save()
+		return job._job_to_json()
+
+	@staticmethod
+	def delete(params):
+		job = Job.objects.get(id = int(params['id']))
+		job.deleted = True
 		job.save()
 		return job._job_to_json()
 

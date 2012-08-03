@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^job/update$', 'together_app.views_jobs.update'),
     url(r'^job/get_job_details$', 'together_app.views_jobs.get_job_details'),
     url(r'^job/mark_completed$', 'together_app.views_jobs.mark_completed'),
+    url(r'^job/delete$', 'together_app.views_jobs.delete'),
     # url(r'^together/', include('together.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

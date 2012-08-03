@@ -1,6 +1,6 @@
 Ressource job
-  - create
-  - update
-  - destroy
+  - index (job)
+  - create(job)
+  - update(job)
+  - destroy()
   - show
-  - index # List all ressources 
