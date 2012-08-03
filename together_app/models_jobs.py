@@ -21,7 +21,6 @@ class Job(models.Model):
 
 	@staticmethod
 	def index(project_id):
-		print "I made it here"
 		jobs_ordered = Job.objects.filter(project_id=int(project_id), deleted=False).order_by('completed', 'order')
 		jobs_ordered = serializers.serialize('json', jobs_ordered) # use serialyze here but do not give the same kind of data of _job_to_json So in javascript need to transfer that back to the same kind of value
 		return jobs_ordered
@@ -68,7 +67,7 @@ class Job(models.Model):
 		for key in ['title', 'note', 'assign_to']: # set all params
 			if params.has_key(key):
 				setattr(self, key, params[key])
-		
+
 	def set_project_id(self, params):
 		project = Project.objects.get(id = params['project_id']) # assign project
 		setattr(self, 'project_id', project)

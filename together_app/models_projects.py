@@ -6,6 +6,7 @@ class Project(models.Model):
 	title = models.CharField(max_length=200)
 	create_at = models.DateTimeField(auto_now_add=True)
 	details = models.TextField(blank=True)
+	deleted = models.BooleanField(default = False)
 
 	def __unicode__(self):
 		return self.title
@@ -20,9 +21,15 @@ class Project(models.Model):
 
 	@staticmethod
 	def update(params):
-		print params
 		project = Project.objects.get(id = int(params['id']))
 		project.set_params(params)
+		project.save()
+		return project._project_to_json()
+
+	@staticmethod
+	def delete(params):
+		project = Project.objects.get(id = int(params['id']))
+		project.deleted = True
 		project.save()
 		return project._project_to_json()
 

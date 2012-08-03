@@ -50,7 +50,10 @@ $(document).ready(function() {
             Projects.update(form_data,project_data); // update job
         }
     });
-
+    $('#project-form #delete-project').click(function(event) {
+        event.preventDefault(); 
+        Projects.delete_project()
+    });
     //This is to add the CSRF to tha Ajax POST method
     jQuery(document).ajaxSend(function(event, xhr, settings) {
         function getCookie(name) {
@@ -123,7 +126,7 @@ Jobs.job = function(data) { //create a object job
 Jobs.index = function(project){ //create index
     //get project ID from project 
     $('h1.project-title').html(project.title);
-    $('#job-form').data('project_id', project.project_id);
+    $('#job-form').data('project_id', project.id);
     url = '/'+project.id+'/index'
     Projects.show_form()
     $.ajax({
@@ -159,7 +162,6 @@ Jobs.job_html = function(job) {//create the html for a job
 Jobs.get_form_data = function(){ //get the project data from the form and 
     var form_data = $('#job-form').serializeObject();
     form_data.project_id = $('#job-form').data('project_id'); // get the project id from the job form and sent it to the form
-    console.log(form_data)
     return form_data;
     //object{assign_to, due_date, note, project_id, title}
 };
@@ -171,7 +173,7 @@ Jobs.create = function(form_data){ // form_data from function get_form_data //ob
         $.ajax({
             type: "POST",
             url: "/job/add_job",
-            data: form_data 
+            data: form_data
         }).done(Jobs.reorder);// add job to page
     }
 };
@@ -276,6 +278,11 @@ Jobs.form_error = function(form_data) {
     }
 };
 
+Jobs.show_form = function() {
+    $('#job-form').show();
+    $('#project-form').hide();
+}
+
 Projects.index = function() {
     $('#project_table').empty()
     $.ajax({
@@ -294,7 +301,6 @@ Projects.list_project = function(data) {
 }
 
 Projects.project_html = function(project) {
-    console.log(project)
     var html = '<tr class="project" id='+project.pk+'><td class="title">'+
     project.fields.title +
     '</td><td class = "right-row">></td></tr>';
@@ -306,11 +312,6 @@ Projects.project_details = function(project) {
     $('#project-form #title').val(project.title)
     $('#project-form #details').val(project.details)
     $('#project-form').data('project-data',project)
-}
-
-Jobs.show_form = function() {
-    $('#job-form').show();
-    $('#project-form').hide();
 }
 
 Projects.show_form = function() {
@@ -380,6 +381,16 @@ Projects.update_title = function (data) {
     $('#project_table tr#'+data.id+' td.title').html(data.title)
     $('#project_table tr#'+data.id).data('project-data',data)
     Projects.clear_form()
+};
+
+Projects.delete_project = function() {
+    var project_data = $('#project-form').data('project-data');
+    $.ajax({
+        type: "POST",
+        url: "/project/delete",
+        data: project_data
+    }).done(Projects.index);
+    return false;
 };
 
 $.fn.serializeObject = function()

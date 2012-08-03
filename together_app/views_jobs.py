@@ -23,12 +23,6 @@ def update(request):
 	return HttpResponse(job, 'application/json')
 
 @csrf_protect
-def get_job_details(request):
-	job = request.POST
-	job = Job.objects.get(id = int(job['job_id']))
-	return HttpResponse(job, 'application/json')
-
-@csrf_protect
 def mark_completed(request):
 	job_data = request.POST
 	job = Job.mark_completed(job_data)

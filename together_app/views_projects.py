@@ -11,8 +11,8 @@ def home(request):
 
 @csrf_protect
 def index(request):
-    projects = Project.objects.all()
-    data = serializers.serialize('json', Project.objects.all())
+    projects = Project.objects.filter(deleted=False)
+    data = serializers.serialize('json', projects)
     return HttpResponse(data, 'application/json')
 
 @csrf_protect # should not be exempt
@@ -25,4 +25,10 @@ def add(request):
 def update(request):
 	form_data = request.POST
 	project = Project.update(form_data)
+	return HttpResponse(project, 'application/json')
+
+@csrf_protect
+def delete(request):
+	project_data = request.POST
+	project = Project.delete(project_data)
 	return HttpResponse(project, 'application/json')
