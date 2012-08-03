@@ -45,3 +45,7 @@ div.center {
 #job_table tr.completed {
 	background-color: red;
 }
+
+tr.selected {
+	background-color: whiteSmoke;
+}

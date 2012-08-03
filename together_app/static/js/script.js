@@ -3,7 +3,7 @@ $(document).ready(function() {
     order_number = 1;
     $('div#error_message').hide();
     $('#show-projects').click(Projects.index);
-    $("ul#projects").on('click','li.project',Jobs.index);
+    $('tbody#project_table').on('click','tr.project',Jobs.index);
     $('#submit-job').click(function(event){ //in a event click return 'event'
         event.preventDefault(); // make sure to not do the Default (send a get)
         var job_data = $('#job-form').data('job-data')
@@ -18,7 +18,7 @@ $(document).ready(function() {
     $('#add_job_btn').click(clear_form);
     $('#completed').click(Jobs.mark_completed);
     $('#delete-job').click(Jobs.delete_job);
-    $("ul#projects").on('change','input', alert_test);
+    $('tbody#job_table').on('change','tr td input', Jobs.mark_completed);
 
     //This is to add the CSRF to tha Ajax POST method
     jQuery(document).ajaxSend(function(event, xhr, settings) {
@@ -92,8 +92,11 @@ Jobs.job = function(data) { //create a object job
 Jobs.index = function(){ //create index
     $('div.center').css('visibility', 'visible')
     var project = $(this).data('project-data');//get project ID from project 
-    $('h1.project-title').html(project.title)
-    $('#job-form').data('project_id', project.project_id)
+    $('#project_table tr').removeClass('selected')
+    $(this).addClass('selected')
+    console.log(project);
+    $('h1.project-title').html(project.title);
+    $('#job-form').data('project_id', project.project_id);
     url = '/'+project.project_id+'/index'
     $.ajax({
         type: "POST",
@@ -113,7 +116,7 @@ Jobs.list_project = function(data) { //create the list of project
 Jobs.job_html = function(job) {//create the html for a job
     var new_job = '<tr class="job" id='+job.id+'><td>'+
     order_number+
-    '</td><td><input value="'+job.id+'" type="checkbox"></td><td>'+
+    '</td><td><input value="'+job.id+'" type="checkbox"></td><td class="title">'+
     job.title +
     '</td><td class = "right-row">></td></tr>';
     order_number++;
@@ -161,14 +164,17 @@ Jobs.add_job_to_page = function(data) { //add the job th the list of job. //{Obj
 };
 
 Jobs.update_title = function(data) {
-    var old_row = $('#job_table tr#'+data.id)
-    var new_row = Jobs.job_html(data)
-    old_row.replaceWith(new_row)
+    $('#job_table tr#'+data.id+' td.title').html(data.title)
+
+    // var new_row = Jobs.job_html(data)
+    // old_row.replaceWith(new_row)
     $('#job_table tr#'+data.id).data('job-data',data)
     clear_form()
 };
 
 Jobs.get_job_details = function() { //show detail on the 'form'
+    $('#job_table tr').removeClass('selected')
+    $(this).addClass('selected')
     $('div.right').css('visibility', 'visible')
     var job = $(this).data('job-data'); 
     $('#job-form').data('job-data',job)
@@ -179,7 +185,8 @@ Jobs.get_job_details = function() { //show detail on the 'form'
 };
 
 function clear_form() {
-    $('div.right').show()
+    $('#job_table tr').removeClass('selected')
+    $('div.right').css('visibility', 'visible')
     $('#job-form').find(':input').each(function() {
         switch(this.type) {
             case 'text':
@@ -214,7 +221,7 @@ Jobs.reorder = function(data) {
 }
 
 Jobs.delete_job = function() {
-    job_data = $('#job-form').data('job-data');
+    var job_data = $('#job-form').data('job-data');
     $.ajax({
         type: "POST",
         url: "/job/delete",
@@ -237,7 +244,7 @@ Jobs.form_error = function(form_data) {
 };
 
 Projects.index = function() {
-    $('#projects').empty()
+    $('#project_table').empty()
     $.ajax({
         type: "POST",
         url: "project/index",
@@ -248,13 +255,17 @@ Projects.list_project = function(data) {
     for (var each in data) {
         project = Projects.project(data[each]);
         html = Projects.project_html(data[each]);
-        $('#projects').append(html);
-        $('#projects li').last().data('project-data',project);
+        $('#project_table').append(html);
+        $('#project_table tr').last().data('project-data',project);
     };
 }
 
 Projects.project_html = function(project) {
-    html = '<li class="project">'+project.fields.title+'</li>';
+    console.log(project)
+    var html = '<tr class="project" id='+project.pk+'><td class="title">'+
+    project.fields.title +
+    '</td><td class = "right-row">></td></tr>';
+    // var html = '<li class="project">'+project.fields.title+'</li>';
     return html
 }
 
