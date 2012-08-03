@@ -8,6 +8,7 @@
         
     </tbody>
   </table>
+  <button class="btn btn-info" id='add_project_btn'>Add Project</button>
 {% endblock %}
 
 
@@ -23,18 +24,37 @@
    	    	
   		</tbody>
   	</table>
-  	<button class="btn btn-info" id='add_job_btn'>Add job</button>
+  	<button class="btn btn-info" id='add_job_btn'>Add Job</button>
 {% endblock %}
 
 
 
 
-{% block task_details %}  
+{% block task_details %}
+<!--Form for Porjects-->
+<form class="form-horizontal" id='project-form' name='project-form'>{% csrf_token %}
+  <fieldset >
+    <div class='control-group' id='error-message'>
+    </div>
+    <div class="control-group">
+      <!-- <input type='hidden' value='' name='project_id'> -->
+      <input type="text" class="large-input" id="title" placeholder='Add a Project' name='title'>
+    </div>
+    <div class="control-group">
+      <textarea class="large-input" id="details" rows='3' placeholder='You can add some notes. Even some links!' name='details'></textarea>  <!-- |safe -->
+    </div>
+    <div class="control-group">
+      <button class="btn btn-primary" id="submit-project">Submit</button>
+      <button class="btn cancel" id='delete-project'>Delete Project</button>
+    </div>
+  </fieldset>
+</form>
+
+<!--Form for Jobs-->
 <form class="form-horizontal" id='job-form' name = 'job-form'>{% csrf_token %}
   <fieldset >
   	<div class="control-group task-buttons">
   		<button class="btn btn-success" id='completed'><i class="icon-ok icon-white"></i> Mark completed</button>
-  		<button class="btn cancel" id='delete-job'>Delete Job</button>
     </div>
     <div class='control-group' id='error-message'>
     </div>
@@ -59,6 +79,7 @@
     </div>
     <div class="control-group">
       <button class="btn btn-primary" id="submit-job">Submit</button>
+      <button class="btn cancel" id='delete-job'>Delete Job</button>
     </div>
   </fieldset>
 </form>

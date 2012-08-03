@@ -68,6 +68,7 @@ class Job(models.Model):
 		for key in ['title', 'note', 'assign_to']: # set all params
 			if params.has_key(key):
 				setattr(self, key, params[key])
+		
 	def set_project_id(self, params):
 		project = Project.objects.get(id = params['project_id']) # assign project
 		setattr(self, 'project_id', project)

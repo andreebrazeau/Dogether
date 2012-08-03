@@ -7,6 +7,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'together_app.views_projects.home'),
     url(r'^project/index$', 'together_app.views_projects.index'),
+    url(r'^project/add$', 'together_app.views_projects.add'),
+    url(r'^project/update$', 'together_app.views_projects.update'),
     url(r'^(?P<project_id>\d+)/index$', 'together_app.views_jobs.index'),
     url(r'^job/add_job$', 'together_app.views_jobs.add_job'),
     url(r'^job/update$', 'together_app.views_jobs.update'),

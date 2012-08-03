@@ -3,8 +3,17 @@ $(document).ready(function() {
     order_number = 1;
     $('div#error_message').hide();
     $('#show-projects').click(Projects.index);
-    $('tbody#project_table').on('click','tr.project',Jobs.index);
-    $('#submit-job').click(function(event){ //in a event click return 'event'
+    $('tbody#project_table').on('click','tr.project',function(){
+        $('div.center').css('visibility', 'visible')
+        $('div.right').css('visibility', 'visible')
+        Projects.show_form()
+        var project = $(this).data('project-data');
+        $('#project_table tr').removeClass('selected')
+        $(this).addClass('selected')
+        Jobs.index(project);
+        Projects.project_details(project);
+    });
+    $('#job-form #submit-job').click(function(event){ //in a event click return 'event'
         event.preventDefault(); // make sure to not do the Default (send a get)
         var job_data = $('#job-form').data('job-data')
         var form_data = Jobs.get_form_data();//get the data from the form
@@ -15,10 +24,32 @@ $(document).ready(function() {
         }
     });
     $('tbody#job_table').on('click','tr.job',Jobs.get_job_details); //Jobs.get_job_details
-    $('#add_job_btn').click(clear_form);
-    $('#completed').click(Jobs.mark_completed);
-    $('#delete-job').click(Jobs.delete_job);
-    $('tbody#job_table').on('change','tr td input', Jobs.mark_completed);
+    $('#add_job_btn').click(function(event) {
+        Jobs.clear_form()
+        Jobs.show_form()
+    });
+    $('#job-form #completed').click(function(event) {
+        event.preventDefault();
+        var job_data = $('#job-form').data('job-data');
+        Jobs.mark_completed(job_data)
+    });
+
+    $('#job-form #delete-job').click(Jobs.delete_job);
+    $('tbody#job_table').on('change','tr td input', function(){
+        job_data = $(this).closest('tr.job').data('job-data')
+        Jobs.mark_completed(job_data)
+    });
+    $('#add_project_btn').click(Projects.clear_form);
+    $('#project-form #submit-project').click(function(event){ //in a event click return 'event'
+        event.preventDefault(); // make sure to not do the Default (send a get)
+        var project_data = $('#project-form').data('project-data')
+        var form_data = Projects.get_form_data();//get the data from the form
+        if (project_data == '') { // if new job
+            Projects.create(form_data); // add job
+        }else{
+            Projects.update(form_data,project_data); // update job
+        }
+    });
 
     //This is to add the CSRF to tha Ajax POST method
     jQuery(document).ajaxSend(function(event, xhr, settings) {
@@ -66,7 +97,7 @@ Jobs = {}
 Projects = {}
 Projects.project = function(data) { //create a object job
     var project = {
-    project_id: data.pk,
+    id: data.pk,
     title: data.fields.title,
     user_id: data.fields.user_id,
     details: data.fields.details
@@ -89,15 +120,12 @@ Jobs.job = function(data) { //create a object job
     return job
 };
 
-Jobs.index = function(){ //create index
-    $('div.center').css('visibility', 'visible')
-    var project = $(this).data('project-data');//get project ID from project 
-    $('#project_table tr').removeClass('selected')
-    $(this).addClass('selected')
-    console.log(project);
+Jobs.index = function(project){ //create index
+    //get project ID from project 
     $('h1.project-title').html(project.title);
     $('#job-form').data('project_id', project.project_id);
-    url = '/'+project.project_id+'/index'
+    url = '/'+project.id+'/index'
+    Projects.show_form()
     $.ajax({
         type: "POST",
         url: url,
@@ -114,9 +142,14 @@ Jobs.list_project = function(data) { //create the list of project
 };
 
 Jobs.job_html = function(job) {//create the html for a job
+    if (job.completed===true){
+        var checked = 'checked'
+    }else{
+        var checked = ''
+    }
     var new_job = '<tr class="job" id='+job.id+'><td>'+
     order_number+
-    '</td><td><input value="'+job.id+'" type="checkbox"></td><td class="title">'+
+    '</td><td><input value="'+job.id+'" type="checkbox"'+checked+'></td><td class="title">'+
     job.title +
     '</td><td class = "right-row">></td></tr>';
     order_number++;
@@ -139,7 +172,7 @@ Jobs.create = function(form_data){ // form_data from function get_form_data //ob
             type: "POST",
             url: "/job/add_job",
             data: form_data 
-        }).done(Jobs.add_job_to_page);// add job to page
+        }).done(Jobs.reorder);// add job to page
     }
 };
 
@@ -160,7 +193,7 @@ Jobs.add_job_to_page = function(data) { //add the job th the list of job. //{Obj
     if (data.completed === true) {
         $('#job_table tr').last().addClass('completed')
     }
-    clear_form()
+    Jobs.clear_form()
 };
 
 Jobs.update_title = function(data) {
@@ -169,22 +202,23 @@ Jobs.update_title = function(data) {
     // var new_row = Jobs.job_html(data)
     // old_row.replaceWith(new_row)
     $('#job_table tr#'+data.id).data('job-data',data)
-    clear_form()
+    Jobs.clear_form()
 };
 
 Jobs.get_job_details = function() { //show detail on the 'form'
     $('#job_table tr').removeClass('selected')
     $(this).addClass('selected')
     $('div.right').css('visibility', 'visible')
+    Jobs.show_form()
     var job = $(this).data('job-data'); 
     $('#job-form').data('job-data',job)
-    $('#title').val(job.title)
-    $('#note').val(job.note)
-    $('#due_date').val(job.due_date)
-    $('#assign_to').val(job.assign_to)
+    $('#job-form #title').val(job.title)
+    $('#job-form #note').val(job.note)
+    $('#job-form #due_date').val(job.due_date)
+    $('#job-form #assign_to').val(job.assign_to)
 };
 
-function clear_form() {
+Jobs.clear_form = function() {
     $('#job_table tr').removeClass('selected')
     $('div.right').css('visibility', 'visible')
     $('#job-form').find(':input').each(function() {
@@ -200,8 +234,7 @@ function clear_form() {
     $('#job-form').data('job-data','')
 };
 
-Jobs.mark_completed = function() {
-    var job_data = $('#job-form').data('job-data');
+Jobs.mark_completed = function(job_data) {
     $.ajax({
         type: "POST",
         url: "/job/mark_completed",
@@ -268,6 +301,86 @@ Projects.project_html = function(project) {
     // var html = '<li class="project">'+project.fields.title+'</li>';
     return html
 }
+
+Projects.project_details = function(project) {
+    $('#project-form #title').val(project.title)
+    $('#project-form #details').val(project.details)
+    $('#project-form').data('project-data',project)
+}
+
+Jobs.show_form = function() {
+    $('#job-form').show();
+    $('#project-form').hide();
+}
+
+Projects.show_form = function() {
+    $('#project-form').show();
+    $('#job-form').hide();
+}
+
+Projects.clear_form = function() {
+    $('#job_table tr').removeClass('selected')
+    $('#project_table tr').removeClass('selected')
+    $('div.right').css('visibility', 'visible')
+    $('div.center').css('visibility', 'hidden')
+    Projects.show_form()
+    $('#project-form').find(':input').each(function() {
+        switch(this.type) {
+            case 'text':
+            case 'textarea':
+                $(this).val('');
+                break;
+        }
+    });
+    $('#project-form').data('project-data','')
+};
+
+Projects.get_form_data = function() {
+    var form_data = $('#project-form').serializeObject();
+    return form_data;
+}
+
+Projects.create = function(form_data) {
+    if (Projects.form_error(form_data) == false) {
+        $('div#error-message').hide()
+        $('div#error-message').html('')
+        $.ajax({
+            type: "POST",
+            url: "/project/add",
+            data: form_data 
+        }).done(Projects.index);// add job to page
+    }
+}
+
+Projects.form_error = function(form_data) {
+    var message = ''
+    if (form_data.title == ''){
+        message += 'Title should not be empty.</br>'
+    }
+
+    if (message.length > 0 ) {
+        $('div#error-message').show()
+        $('div#error-message').html('<p class="error-message">'+message+'</p>')
+    }else{
+        return false
+    }
+};
+
+Projects.update = function (form_data, project_data) {
+    var project_id = project_data.id;
+    form_data.id= project_id
+    $.ajax({
+        type: "POST",
+        url: "/project/update",
+        data: form_data
+    }).done(Projects.index);
+};
+
+Projects.update_title = function (data) {
+    $('#project_table tr#'+data.id+' td.title').html(data.title)
+    $('#project_table tr#'+data.id).data('project-data',data)
+    Projects.clear_form()
+};
 
 $.fn.serializeObject = function()
 {

@@ -15,4 +15,14 @@ def index(request):
     data = serializers.serialize('json', Project.objects.all())
     return HttpResponse(data, 'application/json')
 
+@csrf_protect # should not be exempt
+def add(request):
+	form_data = request.POST
+	project = Project.create(form_data)
+	return HttpResponse(project, 'application/json')
 
+@csrf_protect
+def update(request):
+	form_data = request.POST
+	project = Project.update(form_data)
+	return HttpResponse(project, 'application/json')
