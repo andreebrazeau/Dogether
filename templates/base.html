@@ -16,13 +16,14 @@
 			  		<li class="active">
 			    		<a href="#">Home</a>
 			  		</li>
-			  		<li><a href="#">This</a></li>
-			  		<li><a href="#">That</a></li>
+			  		<li><a href="/account/login">Login</a></li>
+			  		<li><a href="/account/logout">Logout</a></li>
 				</ul>
 	    	</div>
 	  	</div>
 	</div>
 	<div class="container-fluid">
+		{%  block content %}
 		<div class="row-fluid">
 		    <div class="span3 left">
 		      <!--projects content-->
@@ -37,6 +38,7 @@
 		      	{% block task_details %} {% endblock %} 
 		    </div>
 		</div>
+		{% endblock %}
 	</div>
 	<script src="/static/js/script.js"></script>
 </body>

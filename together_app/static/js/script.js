@@ -1,12 +1,13 @@
 
-$(document).ready(function() {
+
+$(function() {
     order_number = 1;
     $('div#error_message').hide();
     $('#show-projects').click(Projects.index);
     $('tbody#project_table').on('click','tr.project',function(){
-        $('div.center').css('visibility', 'visible')
-        $('div.right').css('visibility', 'visible')
-        Projects.show_form()
+        $('div.center').css('visibility', 'visible');
+        $('div.right').css('visibility', 'visible');
+        Projects.show_form();
         var project = $(this).data('project-data');
         $('#project_table tr').removeClass('selected')
         $(this).addClass('selected')
