@@ -14,9 +14,10 @@ def home(request):
 
 @csrf_protect
 def index(request):
-    projects = Project.objects.filter(deleted=False)
-    data = serializers.serialize('json', projects)
-    return HttpResponse(data, 'application/json')
+	user = request.user
+	projects = Project.objects.filter(deleted=False, )
+	data = serializers.serialize('json', projects)
+	return HttpResponse(data, 'application/json')
 
 @csrf_protect # should not be exempt
 def add(request):

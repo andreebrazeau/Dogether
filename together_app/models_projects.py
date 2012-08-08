@@ -1,8 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 import json
 
 class Project(models.Model):
-	user_id = models.CharField(max_length=200)
+	user = models.ForeignKey(User, null=True)
 	title = models.CharField(max_length=200)
 	create_at = models.DateTimeField(auto_now_add=True)
 	details = models.TextField(blank=True)
