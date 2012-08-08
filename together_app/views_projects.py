@@ -4,7 +4,10 @@ from models_jobs import Job
 from django.views.decorators.csrf import csrf_protect
 from django.core import serializers
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
+
+@login_required
 @csrf_protect
 def home(request):
 	return render_to_response('tasks.html')

@@ -14,14 +14,15 @@
 	    	<div class="container">
 	      		<ul class="nav">
 			  		<li class="active">
-			    		<a href="#">Home</a>
+			    		<a href="/accounts/login">Login</a>
 			  		</li>
-			  		<li><a href="#">This</a></li>
-			  		<li><a href="#">That</a></li>
+			  		<li><a href="/users/registration">Register</a></li>
+			  		<li><a href="users/logout">Logout</a></li>
 				</ul>
 	    	</div>
 	  	</div>
 	</div>
+	{% block content %}
 	<div class="container-fluid">
 		<div class="row-fluid">
 		    <div class="span3 left">
@@ -38,6 +39,7 @@
 		    </div>
 		</div>
 	</div>
+	{% endblock %} 
 	<script src="/static/js/script.js"></script>
 </body>
 </html>
