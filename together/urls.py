@@ -1,13 +1,13 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.views import login, logout
-
+ 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'together_app.views_projects.home'),
-    url(r'/project/index$', 'together_app.views_projects.index'),
+    url(r'project/index$', 'together_app.views_projects.index'),
     url(r'^project/add$', 'together_app.views_projects.add'),
     url(r'^project/update$', 'together_app.views_projects.update'),
     url(r'^(?P<project_id>\d+)/index$', 'together_app.views_jobs.index'),
