@@ -2,13 +2,14 @@ from django.db import models
 from django.db.models import Max
 from django.core import serializers
 from models_projects import Project
+from django.contrib.auth.models import User
 import json
 
 class Job(models.Model):
 	title = models.CharField(max_length=200)
 	created_at = models.DateTimeField(auto_now_add=True)
 	note = models.TextField(blank=True)
-	assign_to = models.CharField(max_length=200, blank=True)  #models.ForeignKey(User, null = True) for later
+	user = models.ForeignKey(User, null=True) #models.ForeignKey(User, null = True) for later
 	due_date = models.DateField(null=True,blank=True)
 	parent = models.ForeignKey('self', null=True)
 	project_id = models.ForeignKey(Project)

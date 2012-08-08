@@ -4,18 +4,35 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
+from django.contrib.auth.models import User
+
 
 @csrf_exempt
 def register(request):
+    errors = []
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            new_user = form.save()
+        if request.POST['email']=='':
+            errors.append('You need to provide an email.')
+        if request.POST['username']=='':
+            errors.append('You need to provide an username.')
+        if request.POST['password1'] == '':
+            errors.append('You need to provide a password.')
+        if request.POST['password1'] != request.POST['password2']:
+            errors.append('The passwords need to be the same.')
+        
+        if errors != []:
+            print 1
+            return render_to_response("registration/register.html",{'errors':errors})
+        else: 
+            user = User()
+            user.username = request.POST['username']
+            user.email = request.POST['email']
+            user.set_password(request.POST['password1'])
+            user.save()
+
             return HttpResponseRedirect("/project")
-    else:
-        form = UserCreationForm()
-    return render_to_response("registration/register.html", 
-                                {'form': form,})
+        print 3
+    return render_to_response("registration/register.html")
 
 # @csrf_exempt
 def login(request):

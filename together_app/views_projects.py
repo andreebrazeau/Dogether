@@ -15,7 +15,7 @@ def home(request):
 @csrf_protect
 def index(request):
 	user = request.user
-	projects = Project.objects.filter(deleted=False, )
+	projects = Project.objects.filter(deleted=False, user = user)
 	data = serializers.serialize('json', projects)
 	return HttpResponse(data, 'application/json')
 

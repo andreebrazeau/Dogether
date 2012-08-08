@@ -12,15 +12,15 @@ body {
 	width: 98%;
 }
 
-.form-horizontal .control-label {
+#project-form.form-horizontal .control-label, #job-form.form-horizontal .control-label {
 	width: 80px;
 }
 
-.form-horizontal .controls {
+#project-form.form-horizontal .controls,#job-form.form-horizontal .controls {
 	margin-left: 100px
 }
 
-.form-horizontal .form-actions {
+#project-form.form-horizontal .form-actions, #job-form.form-horizontal .form-actions {
 	padding-left: 100px
 }
 
