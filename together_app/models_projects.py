@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from models_teams import Team
 import json
 
 class Project(models.Model):
+	team = models.ForeignKey(Team)
 	user = models.ForeignKey(User, null=True)
 	title = models.CharField(max_length=200)
 	create_at = models.DateTimeField(auto_now_add=True)
@@ -47,6 +49,7 @@ class Project(models.Model):
 			'id' : self.id,
 			'details':self.details,
 			'user_id': self.user_id, 
+			'team': self.team_id
 			'title': self.title
 			}
 		data = json.dumps(result)

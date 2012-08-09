@@ -83,7 +83,7 @@ class Job(models.Model):
 
 	def _job_to_json(self):
 		result = {
-			'assign_to': self.assign_to, 
+			'assign_to': self.user, 
 			'completed': self.completed,
 			'due_date': str(self.due_date),
 			'id' : self.id,

@@ -6,57 +6,58 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.contrib.auth.models import User
 
-
 @csrf_exempt
-def register(request):
-    errors = []
-    if request.method == 'POST':
-        if request.POST['email']=='':
-            errors.append('You need to provide an email.')
-        if request.POST['username']=='':
-            errors.append('You need to provide an username.')
-        if request.POST['password1'] == '':
-            errors.append('You need to provide a password.')
-        if request.POST['password1'] != request.POST['password2']:
-            errors.append('The passwords need to be the same.')
-        
-        if errors != []:
+def home(request):
+    print request.user, request.user.is_authenticated()
+    print request.method =='POST'
+    if request.user.is_authenticated():
+        return HttpResponseRedirect("/project")
+    else: 
+        if request.method =='POST':
             print 1
-            return render_to_response("registration/register.html",{'errors':errors})
-        else: 
-            user = User()
-            user.username = request.POST['username']
-            user.email = request.POST['email']
-            user.set_password(request.POST['password1'])
-            user.save()
+            if request.POST.get('form') == 'register':
+                print 2
+                register(request.POST)
+            if request.POST.get('form') == 'login':
+                print 3
+                login_view(request)
+        else:
+            render_to_response("registration/login.html")
 
-            return HttpResponseRedirect("/project")
-        print 3
-    return render_to_response("registration/register.html")
+    return render_to_response("registration/login.html")
 
-# @csrf_exempt
-def login(request):
-    return render_to_response('registration/login.html')
+def register(form):
+    errors = []
+    if form['email']=='':
+        errors.append('You need to provide an email.')
+    if form['username']=='':
+        errors.append('You need to provide an username.')
+    if form['password1'] == '':
+        errors.append('You need to provide a password.')
+    if form['password1'] != form['password2']:
+        errors.append('The passwords need to be the same.')
+    
+    if errors != []:
+        print 1
+        return render_to_response("registration/register.html",{'errors':errors})
+    else: 
+        user = User()
+        user.username = form['username']
+        user.email = form['email']
+        user.set_password(form['password1'])
+        user.save()
 
-# def login(request):
-#     if request.method != 'POST':
-#         raise Http404('Only POSTs are allowed')
-#     try:
-#         m = Member.objects.get(username=request.POST['username'])
-#         if m.password == request.POST['password']:
-#             request.session['member_id'] = m.id
-#             return HttpResponseRedirect('/you-are-logged-in/')
-#     except Member.DoesNotExist:
-#         return HttpResponse("Your username and password didn't match.")
+        return HttpResponseRedirect("/project")
 
-@csrf_exempt
 def login_view(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
     user = auth.authenticate(username=username, password=password)
+    print user.is_active
     if user is not None and user.is_active:
         # Correct password, and the user is marked "active"
         auth.login(request, user)
+        print 'here'
         # Redirect to a success page.
         return HttpResponseRedirect("/project")
     else:

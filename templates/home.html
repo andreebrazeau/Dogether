@@ -2,8 +2,22 @@
 
 
 {% block content %}
-<h1>Welcome to Together</h1>
 
+<div class="fluid-row header">
+ 
+	<h1 class="h1-center">Welcome to</h1>
+	<img src="/static/img/together_logo.png" class='img-center'>
+
+</div>
+
+<div class="fluid-row">
+  <div class="span6 background">
+  	{% block login %}{% endblock %}
+  </div>
+  <div class="span6 background">
+  	{% block register %}{% endblock %}
+  </div>
+</div>
 
 
 {% endblock %}
