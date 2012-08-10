@@ -5,8 +5,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'together_app.views_registration.home'),
-    url(r'^project$', 'together_app.views_projects.home'),
+    url(r'^$', 'together_app.views_registration.home', name='home'),
+    url(r'^project$', 'together_app.views_projects.home', name='project_home'),
     url(r'^project/index$', 'together_app.views_projects.index'),
     url(r'^project/add$', 'together_app.views_projects.add'),
     url(r'^project/update$', 'together_app.views_projects.update'),

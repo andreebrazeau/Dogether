@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -47,7 +47,7 @@ def register(form):
         user.set_password(form['password1'])
         user.save()
 
-        return HttpResponseRedirect("/project")
+        return redirect("project_home")
 
 def login_view(request):
     username = request.POST.get('username', '')
@@ -68,4 +68,4 @@ def login_view(request):
 def logout_view(request):
     auth.logout(request)
     # Redirect to a success page.
-    return render_to_response("registration/login.html")
+    return redirect("home")

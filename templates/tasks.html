@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 {% block projects %}
-<h1> Test add Title</h1>
-  <button class='btn' id='show-projects'>Show Projects</button>
+  <script type="text/javascript"> 
+   
+  </script>
+  <select class='span6' id='teams-selector'>
+    {% for i in teams %}
+    <option data-team_id={{i.id}}>{{i}}</option>
+    {% endfor %}
+  </select>
+  <!-- <button class='btn' id='show-projects'>Show Projects</button> -->
   <table class="table">
     <col width='95%'>
     <col width='5%'>

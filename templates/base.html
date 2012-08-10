@@ -19,6 +19,12 @@
 			  		<li><a href="/project">Projects</a></li>
 			  		<li><a href="/users/registration">Register</a></li>
 			  		<li><a href="users/logout">Logout</a></li>
+
+				</ul>
+				<ul class="nav pull-right">
+					<a class="brand" href="#">
+	  				{{ username }}
+					</a>
 				</ul>
 	    	</div>
 	  	</div>
@@ -42,6 +48,8 @@
 	</div>
 	{% endblock %} 
 	<script src="/static/js/script.js"></script>
+	<script src="/static/js/getCookie.js"></script>
+	<script src="/static/js/serializeObject.js"></script>
 </body>
 </html>
 

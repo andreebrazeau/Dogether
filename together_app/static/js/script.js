@@ -1,8 +1,10 @@
 
 $(document).ready(function() {
     order_number = 1;
+    Teams.index();
     $('div#error_message').hide();
-    $('#show-projects').click(Projects.index);
+    Projects.index();
+    $("#teams-selector").change(Projects.index);
     $('tbody#project_table').on('click','tr.project',function(){
         $('div.center').css('visibility', 'visible')
         $('div.right').css('visibility', 'visible')
@@ -53,44 +55,7 @@ $(document).ready(function() {
     $('#project-form #delete-project').click(function(event) {
         event.preventDefault(); 
         Projects.delete_project()
-    });
-    //This is to add the CSRF to tha Ajax POST method
-    jQuery(document).ajaxSend(function(event, xhr, settings) {
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie != '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        function sameOrigin(url) {
-            // url could be relative or scheme relative or absolute
-            var host = document.location.host; // host + port
-            var protocol = document.location.protocol;
-            var sr_origin = '//' + host;
-            var origin = protocol + sr_origin;
-            // Allow absolute or scheme relative URLs to same origin
-            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-                // or any other URL that isn't scheme relative or absolute i.e relative.
-                !(/^(\/\/|http:|https:).*/.test(url));
-        }
-        function safeMethod(method) {
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-
-        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
-            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-        }
-    });
+    });    
 });
 
 alert_test = function() {
@@ -98,6 +63,9 @@ alert_test = function() {
 };
 Jobs = {}
 Projects = {}
+Teams = {}
+
+
 Projects.project = function(data) { //create a object job
     var project = {
     id: data.pk,
@@ -284,10 +252,13 @@ Jobs.show_form = function() {
 }
 
 Projects.index = function() {
+    team_id = $('#teams-selector option:selected').data('team_id')
     $('#project_table').empty()
+    // data = $('#team-form').serializeObject()
     $.ajax({
         type: "POST",
         url: "project/index",
+        data: {'team_id':team_id},
     }).done(Projects.list_project);  
 }
 
@@ -393,24 +364,8 @@ Projects.delete_project = function() {
     return false;
 };
 
-$.fn.serializeObject = function()
-{
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function() {
-        if (o[this.name] !== undefined) {
-            if (!o[this.name].push) {
-                o[this.name] = [o[this.name]];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return o;
-};
-
-
+Teams.index = function() {
+}
 //
 
 
