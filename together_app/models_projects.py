@@ -23,7 +23,7 @@ class Project(models.Model):
 	def create(params):
 		project = Project()
 		project.set_params(params)
-		project.set_user()
+		project.set_team(params)
 		project.save()
 		return project._project_to_json()
 
@@ -46,8 +46,8 @@ class Project(models.Model):
 			if params.has_key(key):
 				setattr(self, key, params[key])
 
-	def set_user(self):
-		self.user_id = 'me'
+	def set_team(self, params):
+		self.team = Team.objects.get(id = params['team_id'])
 
 	def _project_to_json(self):
 		result = {

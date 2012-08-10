@@ -1,6 +1,10 @@
 
 $(document).ready(function() {
     order_number = 1;
+    $('#dialog').dialog({ autoOpen: false })
+    $('#edit-team, #add-team').click(function() {
+        $( "#dialog" ).dialog('open');
+    });
     Teams.index();
     $('div#error_message').hide();
     Projects.index();
@@ -313,6 +317,8 @@ Projects.get_form_data = function() {
 }
 
 Projects.create = function(form_data) {
+    var team_id = $('#teams-selector option:selected').data('team_id')
+    form_data['team_id']=team_id
     if (Projects.form_error(form_data) == false) {
         $('div#error-message').hide()
         $('div#error-message').html('')

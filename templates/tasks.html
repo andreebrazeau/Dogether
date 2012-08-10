@@ -1,13 +1,32 @@
 {% extends "base.html" %}
 {% block projects %}
-  <script type="text/javascript"> 
-   
-  </script>
-  <select class='span6' id='teams-selector'>
-    {% for i in teams %}
-    <option data-team_id={{i.id}}>{{i}}</option>
-    {% endfor %}
-  </select>
+  <div id="dialog" title="Basic dialog">
+    <form id='team-form'>
+      <label>Team's name</label>
+      <input type='text' name="title" /><br />
+      <button class='btn'>Edit team's name</button><br />
+    </form>
+    <p>Add members to you team</p>
+    <form id='teamate-form'>  
+      <label>Email</label>
+      <input type ='email' name="user" /><br />
+      <button class='btn'>send invitation</button><br />
+    </form>
+  </div>
+
+  <div class='btn-toolbar'>
+    <div class="btn-group">
+      <select id='teams-selector' class='btn-mini' style="margin-bottom: 0px">
+        {% for i in teams %}
+        <option data-team_id={{i.id}}>{{i}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="btn-group" style= 'vertical-align:middle'>
+      <button id='edit-team'class='btn'><i class="icon-cog"></i></button>
+      <button id='add-team'class='btn'><i class="icon-plus"></i></button>
+    </div>
+  </div>
   <!-- <button class='btn' id='show-projects'>Show Projects</button> -->
   <table class="table">
     <col width='95%'>
