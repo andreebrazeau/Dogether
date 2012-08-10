@@ -19,8 +19,7 @@ def home(request):
 @csrf_protect
 def index(request):
 	team_id = request.POST.get('team_id')
-	team = Team.objects.get( id = team_id)
-	projects = team.project_set.filter(deleted=False, team= team.id)
+	projects = Project.index(team_id)
 	data = serializers.serialize('json', projects)
 	return HttpResponse(data, 'application/json')
 

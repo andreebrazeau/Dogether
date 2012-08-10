@@ -15,9 +15,8 @@ class Project(models.Model):
 		return self.title
 
 	@staticmethod
-	def index(user, team_id):
-		projects = Project.objects.filter(deleted=False)
-		projects = serializers.serialize('json', projects) # use serialyze here but do not give the same kind of data of _job_to_json So in javascript need to transfer that back to the same kind of value
+	def index(team_id):
+		projects = Project.objects.filter(deleted=False, team= team_id)
 		return projects
 
 	@staticmethod
