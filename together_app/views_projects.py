@@ -26,8 +26,8 @@ def index(request):
 @csrf_protect # should not be exempt
 def add(request):
 	form_data = request.POST
-	print form_data
-	project = Project.create(form_data)
+	user = request.user
+	project = Project.create(form_data, user)
 	return HttpResponse(project, 'application/json')
 
 @csrf_protect

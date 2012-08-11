@@ -8,12 +8,15 @@ class Team(models.Model):
 	def __unicode__(self):
 		return self.title
 
+
 	@staticmethod
-	def create(params):
+	def create(params, user):
 		team = Team()
 		team.set_params(params)
+		team.set_user(user)
 		team.save()
 		return team._team_to_json()
+
 
 	@staticmethod
 	def update(params):
@@ -21,6 +24,10 @@ class Team(models.Model):
 		team.set_params(params)
 		team.save()
 		return team._team_to_json()
+
+
+	def set_user(self, user):
+		Team.users.add(user)
 
 
 	def set_params(self, params):
