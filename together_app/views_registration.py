@@ -49,11 +49,11 @@ def register(form):
 
         return HttpResponseRedirect("/project")
 
+@csrf_exempt
 def login_view(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
     user = auth.authenticate(username=username, password=password)
-    print user.is_active
     if user is not None and user.is_active:
         # Correct password, and the user is marked "active"
         auth.login(request, user)
