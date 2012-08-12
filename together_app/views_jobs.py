@@ -3,34 +3,31 @@ from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponse
 from models_projects import Project
 from models_jobs import Job
+from piston.handler import BaseHandler
 import json
 
-@csrf_protect
-def index(request, project_id):
-	jobs_ordered = Job.index(project_id)
-	return HttpResponse(jobs_ordered, 'application/json')
+class JobsHandler(BaseHandler):
+	allowed_methods = ('GET','POST','PUT','DELETE')
+	model = Job
+	fields =('id', 'title', 'note', 'user', 'due_date', 'project_id', 'completed', 'order', 'deleted')
 
-@csrf_protect # should not be exempt
-def add_job(request):
-	form_data = request.POST
-	job = Job.create(form_data)
-	return HttpResponse(job, 'application/json')
+	def read(self, request, project_id, job_id=None):
+		if job_id:
+			return Job.objects.get(id=job_id)
+		else:
+			return Job.index(project_id)
 
-@csrf_protect
-def update(request):
-	form_data = request.POST
-	job = Job.update(form_data)
-	return HttpResponse(job, 'application/json')
+	def create(self, request, project_id):
+		form_data = request.data
+		print form_data
+		return Job.create(form_data, project_id)
 
-@csrf_protect
-def mark_completed(request):
-	job_data = request.POST
-	job = Job.mark_completed(job_data)
-	return HttpResponse(job, 'application/json')
 
-@csrf_protect
-def delete(request):
-	job_data = request.POST
-	print 'job_data', job_data
-	job = Job.delete(job_data)
-	return HttpResponse(job, 'application/json')
+	def update(self, request, project_id, job_id):
+		form_data = request.data
+		job = Job.update(form_data, job_id)
+		return job
+
+	def delete(self, request, project_id, job_id):
+		return Job.delete(job_id)
+

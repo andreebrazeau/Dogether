@@ -80,11 +80,15 @@
 <!--Form for Jobs-->
 <form class="form-horizontal" id='job-form' name = 'job-form'>{% csrf_token %}
   <fieldset >
-  	<div class="control-group task-buttons">
-  		<button class="btn btn-success" id='completed'><i class="icon-ok icon-white"></i> Mark completed</button>
-    </div>
     <div class='control-group' id='error-message'>
     </div>
+    <div class="control-group">
+        <label class="checkbox" for='option-checkbox'>Mark completed
+            <input type='checkbox' id='option-checkbox' value='completed' name='completed' />
+        </label>
+    </div>
+
+    
     <div class="control-group">
     	<input type='hidden' value='' name='project_id'>
     	<input type="text" class="large-input" id="title" placeholder='Add a job' name='title'>

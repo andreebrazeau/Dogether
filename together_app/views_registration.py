@@ -68,8 +68,5 @@ def login_view(request):
 def logout_view(request):
     auth.logout(request)
     # Redirect to a success page.
-<<<<<<< HEAD
     return redirect("home")
-=======
-    return render_to_response("registration/login.html")
->>>>>>> users
+

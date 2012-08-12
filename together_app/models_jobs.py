@@ -6,11 +6,12 @@ from django.contrib.auth.models import User
 import json
 
 class Job(models.Model):
+	id = models.AutoField(primary_key=True)
 	title = models.CharField(max_length=200)
 	created_at = models.DateTimeField(auto_now_add=True)
 	note = models.TextField(blank=True)
 	user = models.ForeignKey(User, null=True, blank=True) #models.ForeignKey(User, null = True) for later
-	due_date = models.DateField(null=True,blank=True)
+	due_date = models.DateField(null=True, blank=True)
 	parent = models.ForeignKey('self', null=True, blank=True)
 	project_id = models.ForeignKey(Project)
 	completed = models.BooleanField(default = False)
@@ -22,42 +23,33 @@ class Job(models.Model):
 
 	@staticmethod
 	def index(project_id):
-		jobs_ordered = Job.objects.filter(project_id=int(project_id), deleted=False).order_by('completed', 'order')
-		jobs_ordered = serializers.serialize('json', jobs_ordered) # use serialyze here but do not give the same kind of data of _job_to_json So in javascript need to transfer that back to the same kind of value
-		return jobs_ordered
+		if project_id:
+			jobs_ordered = Job.objects.filter(project_id=int(project_id), deleted=False).order_by('completed', 'order')
+			return jobs_ordered
 
 	@staticmethod
-	def create(params):
+	def create(params, project_id):
+		print 'hey'
 		job = Job()
 		job.set_params(params)
-		job.set_project_id(params)
+		job.set_project_id(project_id)
 		job.set_order(params)
 		job.save()
-		return job._job_to_json()
+		return job
 
 	@staticmethod
-	def update(params):
-		job = Job.objects.get(id = int(params['id']))
+	def update(params, job_id):
+		job = Job.objects.get(id = job_id)
 		job.set_params(params)
 		job.save()
-		return job._job_to_json()
+		return job
 
 	@staticmethod
-	def mark_completed(params):
-		job = Job.objects.get(id = int(params['id']))
-		if job.completed == True:
-			job.completed = False
-		elif job.completed == False:
-			job.completed = True
-		job.save()
-		return job._job_to_json()
-
-	@staticmethod
-	def delete(params):
-		job = Job.objects.get(id = int(params['id']))
+	def delete(job_id):
+		job = Job.objects.get(id = job_id)
 		job.deleted = True
 		job.save()
-		return job._job_to_json()
+		return job
 
 	def set_params(self, params):
 		if params.has_key('due_date'): # if the field if empty, nedded to change it to None for db transaction
@@ -65,12 +57,16 @@ class Job(models.Model):
 				setattr(self, 'due_date', None)
 			else:
 				setattr(self, 'due_date', params['due_date'])
+		if params.has_key('completed'):
+			self.completed = True
+		else:
+			self.completed = False
 		for key in ['title', 'note', 'assign_to']: # set all params
 			if params.has_key(key):
 				setattr(self, key, params[key])
 
-	def set_project_id(self, params):
-		project = Project.objects.get(id = params['project_id']) # assign project
+	def set_project_id(self, project_id):
+		project = Project.objects.get(pk = project_id) # assign project
 		setattr(self, 'project_id', project)
 
 	def set_order(self, params):
@@ -80,6 +76,15 @@ class Job(models.Model):
 		else:
 			order = max_order['order__max']+1
 		setattr(self, 'order', order)
+
+	# def complete(self):
+	# 	print 'we are here'
+	# 	if self.completed == True:
+	# 		self.completed = False
+	# 		print 'now False'
+	# 	elif self.completed == False:
+	# 		self.completed = True
+	# 		print 'now True'
 
 	def _job_to_json(self):
 		result = {

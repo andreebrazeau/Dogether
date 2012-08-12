@@ -16,7 +16,7 @@ $(document).ready(function() {
         var project = $(this).data('project-data');
         $('#project_table tr').removeClass('selected')
         $(this).addClass('selected')
-        Jobs.index(project);
+        Jobs.index(project.id);
         Projects.project_details(project);
     });
     $('#job-form #submit-job').click(function(event){ //in a event click return 'event'
@@ -34,16 +34,21 @@ $(document).ready(function() {
         Jobs.clear_form()
         Jobs.show_form()
     });
-    $('#job-form #completed').click(function(event) {
+    $('#job-form #option-checkbox').change(function(event) {
         event.preventDefault();
-        var job_data = $('#job-form').data('job-data');
-        Jobs.mark_completed(job_data)
+        var job_data = $('#job-form').data('job-data')
+        var form_data = Jobs.get_form_data();//get the data from the form
+        Jobs.update(form_data,job_data);
     });
 
-    $('#job-form #delete-job').click(Jobs.delete_job);
+    $('#job-form #delete-job').click(function(event) {
+        event.preventDefault();
+        Jobs.delete_job();
+    });
     $('tbody#job_table').on('change','tr td input', function(){
         job_data = $(this).closest('tr.job').data('job-data')
-        Jobs.mark_completed(job_data)
+        var form_data = Jobs.get_form_data();//get the data from the form
+        Jobs.update(form_data,job_data);
     });
     $('#add_project_btn').click(Projects.clear_form);
     $('#project-form #submit-project').click(function(event){ //in a event click return 'event'
@@ -97,26 +102,27 @@ Jobs.job = function(data) { //create a object job
 
 Jobs.index = function(project){ //create index
     //get project ID from project 
-    $('h1.project-title').html(project.title);
-    $('#job-form').data('project_id', project.id);
-    url = '/'+project.id+'/index'
+    // $('h1.project-title').html(project.title);
+    $('#job-form').data('project_id', project);
+    url = '/projects/'+project+'/jobs/'
     Projects.show_form()
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: url,
-        data: project
     }).done(Jobs.list_project);// call list project
 };
 
 Jobs.list_project = function(data) { //create the list of project
+
     $('#job_table').empty()
     order_number = 1;
     for (var each in data) { // orderred list here
-        Jobs.add_job_to_page(Jobs.job(data[each]))// nest to pass in the Jons.job function to have the same kind os data
+        Jobs.add_job_to_page(data[each])// nest to pass in the Jons.job function to have the same kind os data
     };
 };
 
 Jobs.job_html = function(job) {//create the html for a job
+    console.log(job)
     if (job.completed===true){
         var checked = 'checked'
     }else{
@@ -134,38 +140,47 @@ Jobs.job_html = function(job) {//create the html for a job
 Jobs.get_form_data = function(){ //get the project data from the form and 
     var form_data = $('#job-form').serializeObject();
     form_data.project_id = $('#job-form').data('project_id'); // get the project id from the job form and sent it to the form
+    console.log(form_data)
     return form_data;
     //object{assign_to, due_date, note, project_id, title}
 };
 
 Jobs.create = function(form_data){ // form_data from function get_form_data //object{assign_to, due_date, note, project_id, title}
     if (Jobs.form_error(form_data) == false) {
+        console.log(form_data)
+        url = '/projects/'+form_data.project_id+'/jobs/'
         $('div#error-message').hide()
         $('div#error-message').html('')
+        console.log(form_data)
         $.ajax({
             type: "POST",
-            url: "/job/add_job",
+            url: url,
             data: form_data
-        }).done(Jobs.reorder);// add job to page
+        }).done(function(){Jobs.index(form_data.project_id)});
     }
 };
 
 Jobs.update = function (form_data, job_data) {
     var job_id = job_data.id;
     form_data.id= job_id
+    console.log(form_data)
+    url = '/projects/'+form_data.project_id+'/jobs/'+job_id+'/'
     $.ajax({
-        type: "POST",
-        url: "/job/update",
+        type: "PUT",
+        url: url,
         data: form_data
-    }).done(Jobs.update_title);
+    }).done(function(){Jobs.index(form_data.project_id)});
+    
 };
 
 Jobs.add_job_to_page = function(data) { //add the job th the list of job. //{Object {assign_to, completed, due_date, note, order, parent, project_id, title}
+    console.log(data)
     var new_job = Jobs.job_html(data)
     $('#job_table').append(new_job);
     $('#job_table tr').last().data('job-data',data);// add the job to the data of the Tr element
     if (data.completed === true) {
-        $('#job_table tr').last().addClass('completed')
+        $('#job-form #option-checkbox').attr('checked','checked');
+        $('#job_table tr').last().addClass('completed');
     }
     Jobs.clear_form()
 };
@@ -229,12 +244,12 @@ Jobs.reorder = function(data) {
 
 Jobs.delete_job = function() {
     var job_data = $('#job-form').data('job-data');
+    console.log(job_data)
+    url = '/projects/'+job_data.project_id.id+'/jobs/'+job_data.id+'/'
     $.ajax({
-        type: "POST",
-        url: "/job/delete",
-        data: job_data
-    }).done(Jobs.reorder);
-    return false;
+        type: "DELETE",
+        url: url,
+    }).done(function(){Jobs.index(job_data.project_id.id)});
 }
 Jobs.form_error = function(form_data) {
     var message = ''
