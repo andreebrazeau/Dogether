@@ -60,6 +60,18 @@
 			<td class = "right-row">></td>
 		{% endverbatim %}
     </script>
+    <script id="job_app_template" type="text/x-handlebars-template">
+    	{% verbatim %}
+			<h1 class='project-title'>{{this.title}}</h1>	    
+		    <table class="table">
+		    	<col width='5%'>
+		    	<col width='5%'>
+		    	<col width='85%'>
+		    	<col width='5%'>
+		  	</table>
+  			<button class="btn  btn-primary" id='add_job_btn'>Add Job</button>
+		{% endverbatim %}
+    </script>
 </head>
 <body>
 	<div class="navbar navbar-fixed-top">
@@ -89,7 +101,7 @@
 		      <!--projects content-->
 		      {% block projects %} {% endblock %}   
 		    </div>
-		    <div class="span5 center">
+		    <div class="span5 center" id="job_pannel">
 		      	<!--Project content-->
 		    	{% block tasks %} {% endblock %}  
 		    </div>

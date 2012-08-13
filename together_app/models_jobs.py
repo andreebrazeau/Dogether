@@ -52,7 +52,7 @@ class Job(models.Model):
 		return job
 
 	def set_params(self, params):
-		print params['completed']
+		print params['due_date']
 		if params.has_key('due_date'): # if the field if empty, nedded to change it to None for db transaction
 			if params['due_date'] == '':
 				setattr(self, 'due_date', None)
@@ -65,6 +65,7 @@ class Job(models.Model):
 		for key in ['title', 'note', 'assign_to']: # set all params
 			if params.has_key(key):
 				setattr(self, key, params[key])
+		print self.due_date, self.completed, self.title, self.note, self.assign_to
 
 	def set_project_id(self, project_id):
 		project = Project.objects.get(pk = project_id) # assign project

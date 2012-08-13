@@ -9,18 +9,7 @@ $(document).ready(function() {
     $('div#error_message').hide();
     Projects.index();
     $("#teams-selector").change(Projects.index);
-    $('tbody#project_table').on('click','tr.project',function(){
-        $('div.center').css('visibility', 'visible')
-        $('div.right').css('visibility', 'visible')
-        // Projects.show_form()
-        var project = $(this).data('project-data');
-        console.log(project)
-        $('#project_table tr').removeClass('selected')
-        $(this).addClass('selected')
-        var job_table = new JobListView({el:$('tbody#job_table'), project_id:project.id});
-        // TogetherJobs.index(project.id);
-        Projects.project_details(project);
-    });
+    
     // $('#job-form #submit-job').click(function(event){ //in a event click return 'event'
     //     event.preventDefault(); // make sure to not do the Default (send a get)
     //     var job_data = $('#job-form').data('job-data')
