@@ -2,6 +2,9 @@ var JobFormView = Backbone.View.extend({
     initialize: function (options) {
         source = $('#job_form_template').html()
         this.template = Handlebars.compile(source)
+        project_id = this.model.get('project_id').id
+        console.log(project_id)
+        $('#job_form_template').data('project_id', project_id)
     },
     events: {
         "click #job-form :submit": "handleForm",
@@ -13,28 +16,33 @@ var JobFormView = Backbone.View.extend({
 
     handleForm: function() {
         event.preventDefault();
-        var form = $('#job_form');
+        var form = $('#job-form');
 
-        var jobData = {
+        //get data for the checkbox
+        var job_data = {
             title: $(form).find('#title').val(),
             note: $(form).find('#note').val(),
             due_date: $(form).find('#due_date').val(),
             assign_to: $(form).find('#assign_to').val(),
-            completed: $(form).find(':checked').map(function() {
-                return $(this).attr('value');
-            }).get()
+            completed: $(form).find('#completed').val()
         };
 
-        if ($('#jobForm').data('JobId'))
+        if ($('#job_form').data('Job_id'))
         {
-            JobData.id = $('#passwordModal').data('passwordId');
+            JobData.id = $('#Job_form').data('job_id');
             this.JobList.updatePassword(jobData, { error: this.displayError });
         }
         else
-        {
+        {   
+            project_id = $('#job_form_template').data('project_id')
+            console.log(project_id)
             // add or update the password
-            this.JobList.addNew(JobData, { error: this.displayError });
+            this.job_list = new JobListView({el:$('tbody#job_table'), project_id:project_id})
+
+            this.job_list.addNew(job_data, { error: this.displayError });
         }
+
+        return this
     },
 
     
@@ -94,6 +102,13 @@ var JobListView = Backbone.View.extend({
         // pass a reference to the main application into the password view
         // so it can call methods on it
         this.$el.append(new JobRowView({model: job}).render().el);
+        return this;
+    },
+
+    addNew: function(job, options) {
+        mergedOptions = {wait: true};
+        $.extend(mergedOptions, options);
+        this.jobs.create(job, mergedOptions);
         return this;
     },
 

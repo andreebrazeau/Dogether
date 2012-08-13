@@ -11,23 +11,27 @@ class JobsHandler(BaseHandler):
 	model = Job
 	fields =('id', 'title', 'note', 'user', 'due_date', 'project_id', 'completed', 'order', 'deleted')
 
-	def read(self, request, project_id, job_id=None):
+	def read(self, request, project_id, job_id=None): #GET
+		print 'read'
 		if job_id:
 			return Job.objects.get(id=job_id)
 		else:
 			return Job.index(project_id)
 
-	def create(self, request, project_id):
+	def create(self, request, project_id, job_id): # POST
+		print 'create'
 		form_data = request.data
 		print form_data
 		return Job.create(form_data, project_id)
 
 
-	def update(self, request, project_id, job_id):
+	def update(self, request, project_id, job_id): #PUT
+		print 'update'
 		form_data = request.data
 		job = Job.update(form_data, job_id)
 		return job
 
-	def delete(self, request, project_id, job_id):
+	def delete(self, request, project_id, job_id):  #DELETE
+		print 'delete'
 		return Job.delete(job_id)
 

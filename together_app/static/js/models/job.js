@@ -1,6 +1,5 @@
 var Job = Backbone.Model.extend({
-
-
+	urlRoot : ''
 });
 
 
