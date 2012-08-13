@@ -47,8 +47,8 @@
     	<col width='5%'>
     	<col width='85%'>
     	<col width='5%'>
+        <div id ='job-table-div'></div>
     	<tbody id='job_table'>
-   	    	
   		</tbody>
   	</table>
   	<button class="btn  btn-primary" id='add_job_btn'>Add Job</button>
@@ -78,40 +78,7 @@
 </form>
 
 <!--Form for Jobs-->
-<form class="form-horizontal" id='job-form' name = 'job-form'>{% csrf_token %}
-  <fieldset >
-    <div class='control-group' id='error-message'>
-    </div>
-    <div class="control-group">
-        <label class="checkbox" for='option-checkbox'>Mark completed
-            <input type='checkbox' id='option-checkbox' value='completed' name='completed' />
-        </label>
-    </div>
+<div id ='job-form-div'></div>
 
-    
-    <div class="control-group">
-    	<input type='hidden' value='' name='project_id'>
-    	<input type="text" class="large-input" id="title" placeholder='Add a job' name='title'>
-    </div>
-    <div class="control-group">
-    	<textarea class="large-input" id="note" rows='3' placeholder='You can add some notes. Even some links!' name='note'></textarea>  <!-- |safe -->
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="due_date">Due Date</label>
-      <div class="controls">
-        <input type="date"  id="due_date" name='due_date'>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="assign_to">Assign To</label>
-      <div class="controls">
-        <input type="text" id="assign_to" name='assign_to'>
-      </div>
-    </div>
-    <div class="control-group">
-      <button class="btn btn-primary" id="submit-job">Submit</button>
-      <button class="btn cancel" id='delete-job'>Delete Job</button>
-    </div>
-  </fieldset>
-</form>
+
 {% endblock %}

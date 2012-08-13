@@ -12,44 +12,46 @@ $(document).ready(function() {
     $('tbody#project_table').on('click','tr.project',function(){
         $('div.center').css('visibility', 'visible')
         $('div.right').css('visibility', 'visible')
-        Projects.show_form()
+        // Projects.show_form()
         var project = $(this).data('project-data');
+        console.log(project)
         $('#project_table tr').removeClass('selected')
         $(this).addClass('selected')
-        Jobs.index(project.id);
+        var job_table = new JobListView({el:$('tbody#job_table'), project_id:project.id});
+        // TogetherJobs.index(project.id);
         Projects.project_details(project);
     });
-    $('#job-form #submit-job').click(function(event){ //in a event click return 'event'
-        event.preventDefault(); // make sure to not do the Default (send a get)
-        var job_data = $('#job-form').data('job-data')
-        var form_data = Jobs.get_form_data();//get the data from the form
-        if (job_data == '') { // if new job
-            Jobs.create(form_data); // add job
-        }else{
-            Jobs.update(form_data,job_data); // update job
-        }
-    });
-    $('tbody#job_table').on('click','tr.job',Jobs.get_job_details); //Jobs.get_job_details
-    $('#add_job_btn').click(function(event) {
-        Jobs.clear_form()
-        Jobs.show_form()
-    });
-    $('#job-form #option-checkbox').change(function(event) {
-        event.preventDefault();
-        var job_data = $('#job-form').data('job-data')
-        var form_data = Jobs.get_form_data();//get the data from the form
-        Jobs.update(form_data,job_data);
-    });
+    // $('#job-form #submit-job').click(function(event){ //in a event click return 'event'
+    //     event.preventDefault(); // make sure to not do the Default (send a get)
+    //     var job_data = $('#job-form').data('job-data')
+    //     var form_data = TogetherJobs.get_form_data();//get the data from the form
+    //     if (job_data == '') { // if new job
+    //         TogetherJobs.create(form_data); // add job
+    //     }else{
+    //         TogetherJobs.update(form_data,job_data); // update job
+    //     }
+    // });
+    // $('tbody#job_table').on('click','tr.job',TogetherJobs.get_job_details); //TogetherJobs.get_job_details
+    // $('#add_job_btn').click(function(event) {
+    //     TogetherJobs.clear_form()
+    //     TogetherJobs.show_form()
+    // });
+    // $('#job-form #option-checkbox').change(function(event) {
+    //     event.preventDefault();
+    //     var job_data = $('#job-form').data('job-data')
+    //     var form_data = TogetherJobs.get_form_data();//get the data from the form
+    //     TogetherJobs.update(form_data,job_data);
+    // });
 
-    $('#job-form #delete-job').click(function(event) {
-        event.preventDefault();
-        Jobs.delete_job();
-    });
-    $('tbody#job_table').on('change','tr td input', function(){
-        job_data = $(this).closest('tr.job').data('job-data')
-        var form_data = Jobs.get_form_data();//get the data from the form
-        Jobs.update(form_data,job_data);
-    });
+    // $('#job-form #delete-job').click(function(event) {
+    //     event.preventDefault();
+    //     TogetherJobs.delete_job();
+    // });
+    // $('tbody#job_table').on('change','tr td input', function(){
+    //     job_data = $(this).closest('tr.job').data('job-data')
+    //     var form_data = TogetherJobs.get_form_data();//get the data from the form
+    //     TogetherJobs.update(form_data,job_data);
+    // });
     $('#add_project_btn').click(Projects.clear_form);
     $('#project-form #submit-project').click(function(event){ //in a event click return 'event'
         event.preventDefault(); // make sure to not do the Default (send a get)
@@ -70,7 +72,7 @@ $(document).ready(function() {
 alert_test = function() {
     alert('this')
 };
-Jobs = {}
+TogetherJobs = {}
 Projects = {}
 Teams = {}
 
@@ -85,7 +87,7 @@ Projects.project = function(data) { //create a object job
     return project
 };
 
-Jobs.job = function(data) { //create a object job
+TogetherJobs.job = function(data) { //create a object job
     var job = {
     assign_to: data.fields.assign_to,
     completed: data.fields.completed,
@@ -100,7 +102,7 @@ Jobs.job = function(data) { //create a object job
     return job
 };
 
-Jobs.index = function(project){ //create index
+TogetherJobs.index = function(project){ //create index
     //get project ID from project 
     // $('h1.project-title').html(project.title);
     $('#job-form').data('project_id', project);
@@ -109,20 +111,19 @@ Jobs.index = function(project){ //create index
     $.ajax({
         type: "GET",
         url: url,
-    }).done(Jobs.list_project);// call list project
+    }).done(TogetherJobs.list_project);// call list project
 };
 
-Jobs.list_project = function(data) { //create the list of project
+TogetherJobs.list_project = function(data) { //create the list of project
 
     $('#job_table').empty()
     order_number = 1;
     for (var each in data) { // orderred list here
-        Jobs.add_job_to_page(data[each])// nest to pass in the Jons.job function to have the same kind os data
+        TogetherJobs.add_job_to_page(data[each])// nest to pass in the Jons.job function to have the same kind os data
     };
 };
 
-Jobs.job_html = function(job) {//create the html for a job
-    console.log(job)
+TogetherJobs.job_html = function(job) {//create the html for a job
     if (job.completed===true){
         var checked = 'checked'
     }else{
@@ -137,7 +138,7 @@ Jobs.job_html = function(job) {//create the html for a job
     return new_job
 };
 
-Jobs.get_form_data = function(){ //get the project data from the form and 
+TogetherJobs.get_form_data = function(){ //get the project data from the form and 
     var form_data = $('#job-form').serializeObject();
     form_data.project_id = $('#job-form').data('project_id'); // get the project id from the job form and sent it to the form
     console.log(form_data)
@@ -145,8 +146,8 @@ Jobs.get_form_data = function(){ //get the project data from the form and
     //object{assign_to, due_date, note, project_id, title}
 };
 
-Jobs.create = function(form_data){ // form_data from function get_form_data //object{assign_to, due_date, note, project_id, title}
-    if (Jobs.form_error(form_data) == false) {
+TogetherJobs.create = function(form_data){ // form_data from function get_form_data //object{assign_to, due_date, note, project_id, title}
+    if (TogetherJobs.form_error(form_data) == false) {
         console.log(form_data)
         url = '/projects/'+form_data.project_id+'/jobs/'
         $('div#error-message').hide()
@@ -156,11 +157,11 @@ Jobs.create = function(form_data){ // form_data from function get_form_data //ob
             type: "POST",
             url: url,
             data: form_data
-        }).done(function(){Jobs.index(form_data.project_id)});
+        }).done(function(){TogetherJobs.index(form_data.project_id)});
     }
 };
 
-Jobs.update = function (form_data, job_data) {
+TogetherJobs.update = function (form_data, job_data) {
     var job_id = job_data.id;
     form_data.id= job_id
     console.log(form_data)
@@ -169,36 +170,35 @@ Jobs.update = function (form_data, job_data) {
         type: "PUT",
         url: url,
         data: form_data
-    }).done(function(){Jobs.index(form_data.project_id)});
+    }).done(function(){TogetherJobs.index(form_data.project_id)});
     
 };
 
-Jobs.add_job_to_page = function(data) { //add the job th the list of job. //{Object {assign_to, completed, due_date, note, order, parent, project_id, title}
-    console.log(data)
-    var new_job = Jobs.job_html(data)
+TogetherJobs.add_job_to_page = function(data) { //add the job th the list of job. //{Object {assign_to, completed, due_date, note, order, parent, project_id, title}
+    var new_job = TogetherJobs.job_html(data)
     $('#job_table').append(new_job);
     $('#job_table tr').last().data('job-data',data);// add the job to the data of the Tr element
     if (data.completed === true) {
         $('#job-form #option-checkbox').attr('checked','checked');
         $('#job_table tr').last().addClass('completed');
     }
-    Jobs.clear_form()
+    TogetherJobs.clear_form()
 };
 
-Jobs.update_title = function(data) {
+TogetherJobs.update_title = function(data) {
     $('#job_table tr#'+data.id+' td.title').html(data.title)
 
-    // var new_row = Jobs.job_html(data)
+    // var new_row = TogetherJobs.job_html(data)
     // old_row.replaceWith(new_row)
     $('#job_table tr#'+data.id).data('job-data',data)
-    Jobs.clear_form()
+    TogetherJobs.clear_form()
 };
 
-Jobs.get_job_details = function() { //show detail on the 'form'
+TogetherJobs.get_job_details = function() { //show detail on the 'form'
     $('#job_table tr').removeClass('selected')
     $(this).addClass('selected')
     $('div.right').css('visibility', 'visible')
-    Jobs.show_form()
+    TogetherJobs.show_form()
     var job = $(this).data('job-data'); 
     $('#job-form').data('job-data',job)
     $('#job-form #title').val(job.title)
@@ -207,7 +207,7 @@ Jobs.get_job_details = function() { //show detail on the 'form'
     $('#job-form #assign_to').val(job.assign_to)
 };
 
-Jobs.clear_form = function() {
+TogetherJobs.clear_form = function() {
     $('#job_table tr').removeClass('selected')
     $('div.right').css('visibility', 'visible')
     $('#job-form').find(':input').each(function() {
@@ -223,35 +223,35 @@ Jobs.clear_form = function() {
     $('#job-form').data('job-data','')
 };
 
-Jobs.mark_completed = function(job_data) {
+TogetherJobs.mark_completed = function(job_data) {
     $.ajax({
         type: "POST",
         url: "/job/mark_completed",
         data: job_data
-    }).done(Jobs.reorder);
+    }).done(TogetherJobs.reorder);
     $('tr#'+job_data.id).addClass('completed')
     return false;
 };
 
-Jobs.reorder = function(data) {
+TogetherJobs.reorder = function(data) {
     url = '/'+data.project_id+'/index'    
     $.ajax({
         type: "POST",
         url: url,
         data: data.project_id
-    }).done(Jobs.list_project);
+    }).done(TogetherJobs.list_project);
 }
 
-Jobs.delete_job = function() {
+TogetherJobs.delete_job = function() {
     var job_data = $('#job-form').data('job-data');
     console.log(job_data)
     url = '/projects/'+job_data.project_id.id+'/jobs/'+job_data.id+'/'
     $.ajax({
         type: "DELETE",
         url: url,
-    }).done(function(){Jobs.index(job_data.project_id.id)});
+    }).done(function(){TogetherJobs.index(job_data.project_id.id)});
 }
-Jobs.form_error = function(form_data) {
+TogetherJobs.form_error = function(form_data) {
     var message = ''
     if (form_data.title == ''){
         message += 'Title should not be empty.</br>'
@@ -265,7 +265,7 @@ Jobs.form_error = function(form_data) {
     }
 };
 
-Jobs.show_form = function() {
+TogetherJobs.show_form = function() {
     $('#job-form').show();
     $('#project-form').hide();
 }
@@ -306,7 +306,7 @@ Projects.project_details = function(project) {
 
 Projects.show_form = function() {
     $('#project-form').show();
-    $('#job-form').hide();
+    // $('#job-form').hide();
 }
 
 Projects.clear_form = function() {

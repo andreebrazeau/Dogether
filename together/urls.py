@@ -26,8 +26,8 @@ urlpatterns = patterns('',
     url(r'^users/registration$', 'together_app.views_registration.register'),
     url(r'^users/logout$', 'together_app.views_registration.logout_view'),
 
-    url(r'^projects/(?P<project_id>\d+)/jobs/(?P<job_id>\d*)/', jobs_handler),
-    url(r'^projects/(?P<project_id>\d+)/jobs/', jobs_handler),
+    url(r'^projects/(?P<project_id>\d+)/jobs/(?P<job_id>\d*)', jobs_handler),
+    url(r'^projects/(?P<project_id>\d+)/jobs', jobs_handler),
     # url(r'^together/', include('together.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

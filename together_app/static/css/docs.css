@@ -41,8 +41,9 @@ div.right {
 	visibility:hidden;
 }
 div.center {
-	visibility:hidden;
+	/*visibility:hidden;*/
 }
+
 #job_table tr.completed {
 	background-color: gray;
 	opacity:0.4;
