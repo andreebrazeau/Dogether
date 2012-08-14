@@ -13,45 +13,6 @@
     <script src="/static/js/backbone-min.js"></script>
     <script src="/static/js/handlebars-1.0.0.beta.6.js"></script>
    {% load verbatim %}
-    <script id="job_form_template" type="text/x-handlebars-template">
-    	{% verbatim %}
-		<form class="form-horizontal" id='job-form' name = 'job-form'>
-		  <fieldset >
-		    <div class='control-group' id='error-message'>
-		    </div>
-		    <div class="control-group">
-		        <label class="checkbox" for='option-checkbox' value="checked">Mark completed
-		            <input type='checkbox' id='completed' name='completed'  {{#if this.completed}} checked = "checked" value = 'completed'{{/if}} />
-		        </label>
-		    </div>
-		    
-		    <div class="control-group">
-		    	<input type='hidden' value='{{ this.project_id }}' name='project_id'>
-		    	<input type="text" class="large-input" id="title" placeholder='Add a job' name='title' value="{{ this.title }}">
-		    </div>
-		    <div class="control-group">
-		    	<textarea class="large-input" id="note" rows='3' placeholder='You can add some notes. Even some links!' name='note' value="{{ this.note }}"></textarea>  <!-- |safe -->
-		    </div>
-		    <div class="control-group">
-		      <label class="control-label" for="due_date">Due Date</label>
-		      <div class="controls">
-		        <input type="date"  id="due_date" name='due_date' value="{{ this.created_at }}">
-		      </div>
-		    </div>
-		    <div class="control-group">
-		      <label class="control-label" for="assign_to">Assign To</label>
-		      <div class="controls">
-		        <input type="text" id="assign_to" name='assign_to' value='{{ this.user }}'>
-		      </div>
-		    </div>
-		    <div class="control-group">
-		      <input type="submit" class="btn btn-primary" id="submit-job" value = Submit>
-		      <button class="btn cancel" id='delete-job'>Delete Job</button>
-		    </div>
-		  </fieldset>
-		</form>
-		{% endverbatim %}
-    </script>
     <script id="job_table_template" type="text/x-handlebars-template">
     	{% verbatim %}
 			<td>{{ this.order }}</td>
@@ -94,7 +55,7 @@
 	    	</div>
 	  	</div>
 	</div>
-	<div class="container-fluid">
+	<div class="container-fluid" id='app_panel'>
 	{% block content %}
 		<div class="row-fluid">
 		    <div class="span3 left">

@@ -62,10 +62,10 @@ class Job(models.Model):
 			self.completed = True
 		else:
 			self.completed = False
-		for key in ['title', 'note', 'assign_to']: # set all params
+		for key in ['title', 'note']: # set all params need ('user')
 			if params.has_key(key):
 				setattr(self, key, params[key])
-		print self.due_date, self.completed, self.title, self.note, self.assign_to
+		print self.due_date, self.completed, self.title, self.note, self.user
 
 	def set_project_id(self, project_id):
 		project = Project.objects.get(pk = project_id) # assign project
@@ -88,20 +88,20 @@ class Job(models.Model):
 	# 		self.completed = True
 	# 		print 'now True'
 
-	def _job_to_json(self):
-		result = {
-			'assign_to': self.user, 
-			'completed': self.completed,
-			'due_date': str(self.due_date),
-			'id' : self.id,
-			'note':self.note,
-			'order': self.order,
-			'parent': self.parent,
-			'project_id': self.project_id.id, 
-			'title': self.title
-			}
-		data = json.dumps(result)
-		return data
+	# def _job_to_json(self):
+	# 	result = {
+	# 		'assign_to': self.user, 
+	# 		'completed': self.completed,
+	# 		'due_date': str(self.due_date),
+	# 		'id' : self.id,
+	# 		'note':self.note,
+	# 		'order': self.order,
+	# 		'parent': self.parent,
+	# 		'project_id': self.project_id.id, 
+	# 		'title': self.title
+	# 		}
+	# 	data = json.dumps(result)
+	# 	return data
 
 
 

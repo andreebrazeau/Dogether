@@ -28,7 +28,7 @@
     </div>
   </div>
   <!-- <button class='btn' id='show-projects'>Show Projects</button> -->
-  <table class="table">
+  <table class="table" id='main_project_table'>
     <col width='95%'>
     <col width='5%'>
     <tbody id='project_table'>
@@ -42,7 +42,7 @@
 
 {% block tasks %}  
     <h1 class='project-title'></h1>	    
-    <table class="table">
+    <table class="table" id='main_job_table'>
     	<col width='5%'>
     	<col width='5%'>
     	<col width='85%'>
@@ -75,7 +75,41 @@
 </form>
 
 <!--Form for Jobs-->
-<div id ='job-form-div'></div>
+<form class="form-horizontal" id='job-form' name = 'job-form'>
+  <fieldset >
+    <div class='control-group' id='error-message'>
+    </div>
+    <div class="control-group">
+        <label class="checkbox" for='option-checkbox' value="checked">Mark completed
+            <input type='checkbox' id='completed' name='completed' />
+        </label>
+    </div>
+    
+    <div class="control-group">
+        <input type='hidden' name='project_id'>
+        <input type="text" class="large-input" id="title" placeholder='Add a job' name='title'>
+    </div>
+    <div class="control-group">
+        <textarea class="large-input" id="note" rows='3' placeholder='You can add some notes. Even some links!' name='note'></textarea>  <!-- |safe -->
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="due_date">Due Date</label>
+      <div class="controls">
+        <input type="date"  id="due_date" name='due_date'>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="assign_to">Assign To</label>
+      <div class="controls">
+        <input type="text" id="user" name='user'>
+      </div>
+    </div>
+    <div class="control-group">
+      <button class="btn btn-primary" id="submit-job">Submit</button>
+      <button class="btn cancel" id='delete-job'>Delete Job</button>
+    </div>
+  </fieldset>
+</form>
 
 
 {% endblock %}
