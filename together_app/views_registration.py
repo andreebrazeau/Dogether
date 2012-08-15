@@ -20,7 +20,12 @@ def home(request):
                 register(request.POST)
             if request.POST.get('form') == 'login':
                 print 3
-                login_view(request)
+                errors = login_view(request)
+                print 'errors', errors
+                if errors:
+                    return render_to_response("registration/login.html",{'errors': errors})
+                else:
+                    return redirect("project_home")
         else:
             render_to_response("registration/login.html")
 
@@ -53,16 +58,15 @@ def register(form):
 def login_view(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
+    errors = ''
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         # Correct password, and the user is marked "active"
         auth.login(request, user)
-        print 'here'
         # Redirect to a success page.
-        return HttpResponseRedirect("/project")
     else:
-        # Show an error page
-        return render_to_response("registration/login.html")
+        errors += "Sorry, we were not able to connect you. Please try again."
+    return errors
 
 @csrf_exempt
 def logout_view(request):

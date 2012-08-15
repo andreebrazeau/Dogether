@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from models_projects import Project
 from models_jobs import Job
 from models_teams import Team
@@ -7,14 +7,16 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
-
-@login_required
 @csrf_protect
 def home(request):
 	user = request.user
-	teams = user.team_set.all()
-	projects = Project.objects.filter(team__in=teams)
-	return render_to_response('tasks.html', {'teams':teams, 'username':user.username, 'projects':projects})
+	if user.is_anonymous():
+		return redirect("home")
+	else:
+		teams = user.team_set.all()
+		projects = Project.objects.filter(team__in=teams)
+		print 'project_view home'
+		return render_to_response('tasks.html', {'teams':teams, 'username':user.username, 'projects':projects})
 
 @csrf_protect
 def index(request):

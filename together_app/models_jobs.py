@@ -52,7 +52,7 @@ class Job(models.Model):
 		return job
 
 	def set_params(self, params):
-		print params['due_date']
+		print params
 		if params.has_key('due_date'): # if the field if empty, nedded to change it to None for db transaction
 			if params['due_date'] == '':
 				setattr(self, 'due_date', None)
@@ -78,32 +78,6 @@ class Job(models.Model):
 		else:
 			order = max_order['order__max']+1
 		setattr(self, 'order', order)
-
-	# def complete(self):
-	# 	print 'we are here'
-	# 	if self.completed == True:
-	# 		self.completed = False
-	# 		print 'now False'
-	# 	elif self.completed == False:
-	# 		self.completed = True
-	# 		print 'now True'
-
-	# def _job_to_json(self):
-	# 	result = {
-	# 		'assign_to': self.user, 
-	# 		'completed': self.completed,
-	# 		'due_date': str(self.due_date),
-	# 		'id' : self.id,
-	# 		'note':self.note,
-	# 		'order': self.order,
-	# 		'parent': self.parent,
-	# 		'project_id': self.project_id.id, 
-	# 		'title': self.title
-	# 		}
-	# 	data = json.dumps(result)
-	# 	return data
-
-
 
 
 

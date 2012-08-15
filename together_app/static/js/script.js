@@ -2,9 +2,9 @@
 $(document).ready(function() {
     order_number = 1;
     $('#dialog').dialog({ autoOpen: false })
-    $('#edit-team, #add-team').click(function() {
-        $( "#dialog" ).dialog('open');
-    });
+    // $('#edit-team, #add-team').click(function() {
+    //     $( "#dialog" ).dialog('open');
+    // });
     Teams.index();
     $('div#error_message').hide();
     Projects.index();

@@ -2,8 +2,8 @@
 
 {% block login %}
 
-  {% if form.errors %}
-    <p class="error">Sorry, that's not a valid username or password</p>
+  {% if errors %}
+    <p class="error">{{errors}}</p>
   {% endif %}
   <h1 class='h1-center'>Login</h1>
   <form action="" method="post" class="form-horizontal">

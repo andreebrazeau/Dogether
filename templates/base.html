@@ -13,26 +13,30 @@
     <script src="/static/js/backbone-min.js"></script>
     <script src="/static/js/handlebars-1.0.0.beta.6.js"></script>
    {% load verbatim %}
-    <script id="job_table_template" type="text/x-handlebars-template">
+    <script id="job_row_template" type="text/x-handlebars-template">
     	{% verbatim %}
-			<td>{{ this.order }}</td>
+			<td># {{this.id}}</td>
 			<td><input type="checkbox" {{#if this.completed}} checked = "checked"{{/if}}></td>
 			<td class="title">{{ this.title }}</td>
 			<td class = "right-row">></td>
 		{% endverbatim %}
     </script>
-    <script id="job_app_template" type="text/x-handlebars-template">
+
+    {% load verbatim %}
+    <script id="job_table_template" type="text/x-handlebars-template">
     	{% verbatim %}
-			<h1 class='project-title'>{{this.title}}</h1>	    
-		    <table class="table">
-		    	<col width='5%'>
-		    	<col width='5%'>
-		    	<col width='85%'>
-		    	<col width='5%'>
-		  	</table>
-  			<button class="btn  btn-primary" id='add_job_btn'>Add Job</button>
+			    <h1 class='project-title'>{{this.title}}</h1>	    
+			    <table class="table" id='main_job_table'>
+			        <col width='10%'>
+			        <col width='5%'>
+			        <col width='80%'>
+			        <col width='5%'>
+			  	</table>
+			  	<button class="btn  btn-primary" id='add_job_btn'>Add Job</button>
 		{% endverbatim %}
     </script>
+
+
 </head>
 <body>
 	<div class="navbar navbar-fixed-top">
@@ -40,11 +44,10 @@
 	    	<div class="container">
 	      		<ul class="nav">
 			  		<li class="active">
-			    		<a href="/accounts/login">Login</a>
+			    		<a href="#">Login</a>
 			  		</li>
 			  		<li><a href="/project">Projects</a></li>
-			  		<li><a href="/users/registration">Register</a></li>
-			  		<li><a href="users/logout">Logout</a></li>
+			  		<li><a href="/users/logout">Logout</a></li>
 
 				</ul>
 				<ul class="nav pull-right">
@@ -62,7 +65,7 @@
 		      <!--projects content-->
 		      {% block projects %} {% endblock %}   
 		    </div>
-		    <div class="span5 center" id="job_pannel">
+		    <div class="span5 center" id="job_panel">
 		      	<!--Project content-->
 		    	{% block tasks %} {% endblock %}  
 		    </div>
@@ -73,12 +76,19 @@
 		</div>
 	{% endblock %}
 	</div> 
+	<footer>
+		<div class='container fixed-bottom'>
+		</div>
+	</footer>
 	<script src="/static/js/script.js"></script>
 	<script src="/static/js/backbone_script.js"></script>
 	<script src="/static/js/getCookie.js"></script>
 	<script src="/static/js/serializeObject.js"></script>
 	<script src="/static/js/models/job.js"></script>
 	<script src="/static/js/views/job_views.js"></script>
+	<script src="/static/js/bootstrap-modal.js"></script>
+	<script src="/static/js/bootstrap-tab.js"></script>
+	
 </body>
 </html>
 

@@ -5,7 +5,8 @@ var Job = Backbone.Model.extend({
 
 var Jobs = Backbone.Collection.extend({
 	initialize: function(options){
-		this.project_id = options.project_id;
+		console.log(options)
+		this.project_id = options.project.id;
 	},
 	model: Job,
 	url: function(){

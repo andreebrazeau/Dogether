@@ -6,46 +6,49 @@ var JobRowView = Backbone.View.extend({
     },
 
     initialize: function (options) {
-        source = $('#job_table_template').html()
+        source = $('#job_row_template').html()
         this.template = Handlebars.compile(source)
     },
     render: function() {
         html = this.template(this.model.toJSON())
         this.$el.html(html);
-
-        if (this.model.attributes.completed) {
+        if (this.$el.find('input:checked').length) {
             this.$el.addClass('completed');
         }
         return this;
     },
 
     editJob: function(event){
+        $('#main_job_table tr').removeClass('selected')
+        this.$el.addClass('selected')
         event.preventDefault();
         event.stopImmediatePropagation();
-        $('#job_form').show()
+        $('#job-form').show()
         $('#project-form').hide()
         this.options.app.editJob(this.model);
-
-        // job_form = new JobFormView({el:$('div#job-form-div'), model:this.model});
-        // job_form.render();
     }
 
 
 });
 
 var JobListView = Backbone.View.extend({
-    tagName: 'tbody',
 
     initialize: function(options) {
+        console.log(options)
+        source = $('#job_table_template').html()
+        this.template = Handlebars.compile(source)
         this.jobs = new Jobs(options);
+        this.project = options.project;
         this.jobs.bind('all', this.render, this);
+        // this.jobs.bond('remove', this., this);
+        // this.jobs.bind('reset', this.render, this);
         this.jobs.fetch();
     },
 
     addOne: function(job) {
         // pass a reference to the main application into the password view
         // so it can call methods on it
-        this.$el.append(new JobRowView({model: job,app: this.options.app}).render().el);
+        this.$el.find('#main_job_table').append(new JobRowView({model: job,app: this.options.app}).render().el);
         return this;
     },
 
@@ -57,9 +60,15 @@ var JobListView = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html('');
+        console.log(this.$el)
+        this.$el.html(this.template(this.project));
         this.jobs.each(this.addOne, this);
         return this;
+    },
+
+    cleanup: function() {
+        this.el = null
+        this.jobs.unbind();
     },
 
     updateJob: function(job_data, options) {
@@ -70,18 +79,19 @@ var JobListView = Backbone.View.extend({
         {
             // iterate through all the data in job_data, setting it
             // to the password model
-            for (var key in job_data)
-            {
-                // ignore the ID attribute
-                if (key != 'id')
-                {
-                    job.set(key, job_data[key]);
-                }
-            }
+            job.set(job_data, {silent: true});
 
             // persist the change
-            job.save({}, mergedOptions);
+            job.save(mergedOptions, {silent: true});
         }
+    },
+
+    deleteJob: function(job_id) {
+        job = this.jobs.get(job_id);
+        if (_.isObject(job)){
+            job.destroy();
+        }
+
     },
 
 });
@@ -93,19 +103,25 @@ var JobPanelView = Backbone.View.extend({
         // "click #job-form :submit": "handleForm",
         "click #add_job_btn" : "prepareForm",
         "click #submit-job" : "handleForm",
+        "click #delete-job" : "deleteJob",
+        "change #completed": "handleForm",
     },
 
-    initialize: function (options) {
-        this.job_list = new JobListView({project_id:options.id, app:this});
-        $('#app_panel').data('project_id', options.id);
+    initialize: function (project) {
+        this.job_list = new JobListView({project:project, app:this, el: $('#job_panel')});
+        this.project = project
         // source = $('#job_form_template').html()
         // this.template = Handlebars.compile(source)
     },
 
+    cleanup: function() {
+        this.job_list.cleanup();
+        this.el = null;
+    },
+
     render: function() {
-        console.log(this.$el.find('#main_job_table'))
         this.$el.find('#main_job_table tbody').remove();
-        this.$el.find('#main_job_table').append(this.job_list.render().el);
+        // this.$el.find('#main_job_table').append(this.job_list.render().el);
     },
 
     editJob: function(job) {
@@ -115,9 +131,21 @@ var JobPanelView = Backbone.View.extend({
         $('#job-form').show();
     },
 
+    deleteJob: function() {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (confirm("Are you sure you want to delete this entry?")){
+            job_id = $('#job-form').data('job_id');
+            this.job_list.deleteJob(job_id);
+        }
+    },
+
     prepareForm: function(job_data) {
+        $('#job-form').show()
+        $('#project-form').hide()
         job_data = job_data.attributes || {};
         var data = {
+            'id':'',
             'project_id':'',
             'completed':'',
             'title': '',
@@ -127,11 +155,18 @@ var JobPanelView = Backbone.View.extend({
         };
 
         $.extend(data, job_data);
-        console.log(data.title)
         var form = $('#job-form');
+        if (data.id != ''){
+            $(form).find('#id').html('# '+data.id)
+        }else{
+            $(form).find('#id').html('New Job')
+        }
         $(form).find('#project_id').val(data.project_id.id);
+
         if (data.completed === true){
-            $(form).find('#completed').attr('checked', 'checked')
+            $(form).find('#completed').attr('checked', 'checked');
+        }else{
+            $(form).find('#completed').removeAttr('checked');
         };
         $(form).find('#title').val(data.title);
         $(form).find('#note').val(data.note);
@@ -143,33 +178,32 @@ var JobPanelView = Backbone.View.extend({
 
     handleForm: function() {
         event.preventDefault();
-        event.stopImmediatePropagation();
         var form = $('#job-form');
-
+        
         //get data for the checkbox
         var job_data = {
             project_id: $(form).find('#project_id').val(),
             title: $(form).find('#title').val(),
             note: $(form).find('#note').val(),
             due_date: $(form).find('#due_date').val(),
-            user: $(form).find('#user').val(),
-            completed: $(form).find('#completed').val()
+            user: $(form).find('#user').val()
         };
-
-        console.log($('#job-form').data('job_id'))
+        if ($(form).find('#completed').attr('checked')){
+            job_data.completed = true;
+        }else{
+            job_data.completed = false;
+        }
         if ($('#job-form').data('job_id'))
         {
             job_data.id = $('#job-form').data('job_id');
-            this.job_list.updateJob(job_data, { error: this.displayError });
+            this.job_list.updateJob(job_data);
         }
         else
         {   
-            project_id = $('#app_panel').data('project_id')
-            console.log(project_id)
-            // add or update the password
-            this.job_list = new JobListView({el:$('tbody#job_table'), project_id:project_id})
+            // 
+            this.job_list = new JobListView({project:project, app:this, el: $('#job_panel')})
 
-            this.job_list.addNew(job_data, { error: this.displayError });
+            this.job_list.addNew(job_data);
         }
 
         return this
@@ -188,7 +222,6 @@ var JobFormView = Backbone.View.extend({
     render: function() {
         html = this.template(this.model.toJSON())
         this.$el.html(html);
-        console.log(this.$el)
         // html = this.template()
         // console.log(html)
         // this.$el.html(this.template);

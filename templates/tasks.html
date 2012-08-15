@@ -1,19 +1,30 @@
 {% extends "base.html" %}
 {% block projects %}
-  <div id="dialog" title="Basic dialog">
-    <form id='team-form'>
-      <label>Team's name</label>
-      <input type='text' name="title" /><br />
-      <button class='btn'>Edit team's name</button><br />
-    </form>
-    <p>Add members to you team</p>
-    <form id='teamate-form'>  
-      <label>Email</label>
-      <input type ='email' name="user" /><br />
-      <button class='btn'>send invitation</button><br />
-    </form>
-  </div>
+    <div class="modal hide" id="team_modal">
+        <div = class='modal-header'>
+            <button type='button' class='close' data-dismiss='modal'>x</button>
+            <h3>Edit 'team name'</h3>
+        </div>
+        <div class="modal-body">
+            <form id='team-form'>
+                <label>Team's name</label>
+                <input type='text' name="title" /><br />
+                <button class='btn'>Edit team's name</button><br />
+            </form>
+            <p>Add members to you team</p>
+            <form id='teamate-form'>  
+                <label>Email</label>
+                <input type ='email' name="user" /><br />
+                <button class='btn'>send invitation</button><br />
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn btn-primary">Save changes</a>
+        </div>
+    </div>
 
+  <h1>{{ username }}</h1>
   <div class='btn-toolbar'>
     <div class="btn-group">
       <select id='teams-selector' class='btn-mini' style="margin-bottom: 0px">
@@ -23,8 +34,8 @@
       </select>
     </div>
     <div class="btn-group" style= 'vertical-align:middle'>
-      <button id='edit-team'class='btn'><i class="icon-cog"></i></button>
-      <button id='add-team'class='btn'><i class="icon-plus"></i></button>
+      <button id='edit-team'class='btn' data-toggle="modal" href="#team_modal"><i class="icon-cog"></i></button>
+      <button id='add-team'class='btn'  data-toggle="modal" href="#team_modal"><i class="icon-plus"></i></button>
     </div>
   </div>
   <!-- <button class='btn' id='show-projects'>Show Projects</button> -->
@@ -41,14 +52,7 @@
 
 
 {% block tasks %}  
-    <h1 class='project-title'></h1>	    
-    <table class="table" id='main_job_table'>
-    	<col width='5%'>
-    	<col width='5%'>
-    	<col width='85%'>
-    	<col width='5%'>
-  	</table>
-  	<button class="btn  btn-primary" id='add_job_btn'>Add Job</button>
+
 {% endblock %}
 
 
@@ -76,6 +80,7 @@
 
 <!--Form for Jobs-->
 <form class="form-horizontal" id='job-form' name = 'job-form'>
+    
   <fieldset >
     <div class='control-group' id='error-message'>
     </div>
@@ -83,7 +88,9 @@
         <label class="checkbox" for='option-checkbox' value="checked">Mark completed
             <input type='checkbox' id='completed' name='completed' />
         </label>
+        <h1 id='id'>New Job</h1>
     </div>
+
     
     <div class="control-group">
         <input type='hidden' name='project_id'>
