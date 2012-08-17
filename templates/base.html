@@ -14,11 +14,12 @@
     <script src="/static/js/contributor/handlebars-1.0.0.beta.6.js"></script>
 	<script src="/static/js/contributor/bootstrap-modal.js"></script>
 	<script src="/static/js/contributor/bootstrap-tab.js"></script>
+	<script src="http://js.pusher.com/1.12/pusher.min.js"></script>
    {% load verbatim %}
     <script id="job_row_template" type="text/x-handlebars-template">
     	{% verbatim %}
 			<td># {{this.id}}</td>
-			<td><input type="checkbox" {{#if this.completed}} checked = "checked"{{/if}}></td>
+			<td><input ID='completed' type="checkbox" {{#if this.completed}} checked = "checked"{{/if}}></td>
 			<td class="title">{{ this.title }}</td>
 			<td class = "right-row">></td>
 		{% endverbatim %}

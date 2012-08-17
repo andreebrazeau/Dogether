@@ -1,3 +1,5 @@
+
+
 $(function() {
     var app;
     $('tbody#project_table').on('click','tr.project',function(){

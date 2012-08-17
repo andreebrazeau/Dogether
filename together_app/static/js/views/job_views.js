@@ -2,7 +2,8 @@ var JobRowView = Backbone.View.extend({
     tagName: 'tr',
 
     events: {
-        "click":"editJob"
+        "click":"editJob",
+        "change #completed": "markCompleted"
     },
 
     initialize: function (options) {
@@ -26,6 +27,19 @@ var JobRowView = Backbone.View.extend({
         $('#job-form').show()
         $('#project-form').hide()
         this.options.app.editJob(this.model);
+    },
+
+    markCompleted : function(event) {
+        
+        if (this.model.get('completed')===false){
+            console.log('true'+this.model.get('completed'))
+            this.model.save({completed:true})
+        }
+        else if (this.model.get('completed')===true){
+            console.log('false'+this.model.get('completed'))
+            this.model.save({completed:false})
+        }
+        this.editJob(event);
     }
 
 
@@ -206,9 +220,7 @@ var JobPanelView = Backbone.View.extend({
 
             this.job_list.addNew(job_data);
         }
-
         return this
-
     },
 
 });
