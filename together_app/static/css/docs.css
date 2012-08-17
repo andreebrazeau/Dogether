@@ -54,10 +54,7 @@ div.center {
 	background-color: whiteSmoke;
 }
 input#title {
-	font-size:200%;
-	height:auto;
-	padding-top: auto;
-	padding-bottom: auto;
+	font-size: 2em;
 	vertical-align:middle;
 }
 form.project {
@@ -86,7 +83,7 @@ div.header {
 .table th, .table td {
 	padding:2px 8px;
 }
-#job-form h1 {
+#job-form h1#id {
 	display: inline-block;
 	float: right;
 }

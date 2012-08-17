@@ -16,7 +16,6 @@ $(function() {
         if (app) app.cleanup();
         app = new JobPanelView(project);
         app.render();
-        // TogetherJobs.index(project.id);
         Projects.project_details(project);
     });
     

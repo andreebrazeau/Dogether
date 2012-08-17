@@ -172,8 +172,10 @@ var JobPanelView = Backbone.View.extend({
         $.extend(data, job_data);
         var form = $('#job-form');
         if (data.id != ''){
+            $(form).find('#title').text(data.title);
             $(form).find('#id').html('# '+data.id)
         }else{
+            $(form).find('#title').text('Edit title');
             $(form).find('#id').html('New Job')
         }
         $(form).find('#project_id').val(data.project_id.id);
@@ -183,7 +185,7 @@ var JobPanelView = Backbone.View.extend({
         }else{
             $(form).find('#completed').removeAttr('checked');
         };
-        $(form).find('#title').val(data.title);
+        
         $(form).find('#note').val(data.note);
         $(form).find('#due_date').val(data.due_date);
         $(form).find('#user').val(data.user);
@@ -198,7 +200,7 @@ var JobPanelView = Backbone.View.extend({
         //get data for the checkbox
         var job_data = {
             project_id: $(form).find('#project_id').val(),
-            title: $(form).find('#title').val(),
+            title: $(form).find('#title').text(),
             note: $(form).find('#note').val(),
             due_date: $(form).find('#due_date').val(),
             user: $(form).find('#user').val()
