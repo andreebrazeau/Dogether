@@ -115,6 +115,7 @@ var JobPanelView = Backbone.View.extend({
     },
 
     cleanup: function() {
+        console.log(this)
         this.job_list.cleanup();
         this.el = null;
     },
@@ -213,38 +214,38 @@ var JobPanelView = Backbone.View.extend({
 });
 
 
-var JobFormView = Backbone.View.extend({
-    el: "job-form",
+// var JobFormView = Backbone.View.extend({
+//     el: "job-form",
 
-    events: {
-        // "click #job-form :submit": "handleForm",
-    },
-    render: function() {
-        html = this.template(this.model.toJSON())
-        this.$el.html(html);
-        // html = this.template()
-        // console.log(html)
-        // this.$el.html(this.template);
-    },
-
-    
+//     events: {
+//         // "click #job-form :submit": "handleForm",
+//     },
+//     render: function() {
+//         html = this.template(this.model.toJSON())
+//         this.$el.html(html);
+//         // html = this.template()
+//         // console.log(html)
+//         // this.$el.html(this.template);
+//     },
 
     
 
-    handleForm: function(event) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        this.options.app.handleForm()
-    },
+    
+
+//     handleForm: function(event) {
+//         event.preventDefault();
+//         event.stopImmediatePropagation();
+//         this.options.app.handleForm()
+//     },
 
     
-    displayError: function(model, response) {
-            var that = this;
-            if (response.status == 403) {
-                alert("You don't have permission to edit that data");
-            }
-            else {
-                alert("Unable to create or edit that data. Please make sure you entered valid data.");
-            }
-        }
-});
+//     displayError: function(model, response) {
+//             var that = this;
+//             if (response.status == 403) {
+//                 alert("You don't have permission to edit that data");
+//             }
+//             else {
+//                 alert("Unable to create or edit that data. Please make sure you entered valid data.");
+//             }
+//         }
+// });
