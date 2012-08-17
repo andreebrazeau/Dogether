@@ -1,5 +1,0 @@
-Ressource job
-  - index (job)
-  - create(job)
-  - update(job)
-  - destroy(job)
