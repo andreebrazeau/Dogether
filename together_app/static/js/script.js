@@ -1,5 +1,6 @@
 
-$(document).ready(function() {
+
+$(function() {
     order_number = 1;
     $('#dialog').dialog({ autoOpen: false })
     // $('#edit-team, #add-team').click(function() {
@@ -9,38 +10,7 @@ $(document).ready(function() {
     $('div#error_message').hide();
     Projects.index();
     $("#teams-selector").change(Projects.index);
-    
-    // $('#job-form #submit-job').click(function(event){ //in a event click return 'event'
-    //     event.preventDefault(); // make sure to not do the Default (send a get)
-    //     var job_data = $('#job-form').data('job-data')
-    //     var form_data = TogetherJobs.get_form_data();//get the data from the form
-    //     if (job_data == '') { // if new job
-    //         TogetherJobs.create(form_data); // add job
-    //     }else{
-    //         TogetherJobs.update(form_data,job_data); // update job
-    //     }
-    // });
-    // $('tbody#job_table').on('click','tr.job',TogetherJobs.get_job_details); //TogetherJobs.get_job_details
-    // $('#add_job_btn').click(function(event) {
-    //     TogetherJobs.clear_form()
-    //     TogetherJobs.show_form()
-    // });
-    // $('#job-form #option-checkbox').change(function(event) {
-    //     event.preventDefault();
-    //     var job_data = $('#job-form').data('job-data')
-    //     var form_data = TogetherJobs.get_form_data();//get the data from the form
-    //     TogetherJobs.update(form_data,job_data);
-    // });
 
-    // $('#job-form #delete-job').click(function(event) {
-    //     event.preventDefault();
-    //     TogetherJobs.delete_job();
-    // });
-    // $('tbody#job_table').on('change','tr td input', function(){
-    //     job_data = $(this).closest('tr.job').data('job-data')
-    //     var form_data = TogetherJobs.get_form_data();//get the data from the form
-    //     TogetherJobs.update(form_data,job_data);
-    // });
     $('#add_project_btn').click(Projects.clear_form);
     $('#project-form #submit-project').click(function(event){ //in a event click return 'event'
         event.preventDefault(); // make sure to not do the Default (send a get)
